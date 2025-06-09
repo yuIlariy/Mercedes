@@ -1,12 +1,12 @@
 {
-  "name": "Mercedes",
+  "name": "KHAN-MD",
   "version": "4.5.0",
-  "description": "null",
+  "description": "A WhatsApp Bot Created By JawadTechX",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start index.js --deep-monitoring --attach --name Mercedes",
-    "stop": "pm2 stop Mercedes",
-    "restart": "pm2 restart Mercedes"
+    "start": "pm2 start index.js --deep-monitoring --attach --name KHAN-MD",
+    "stop": "pm2 stop KHAN-MD",
+    "restart": "pm2 restart KHAN-MD"
   },
   "dependencies": {
     "@whiskeysockets/baileys": "npm:@fizzxydev/baileys-pro@8.5.12",
