@@ -8,24 +8,27 @@ cmd({
     pattern: "menu",
     desc: "Show interactive menu system",
     category: "menu",
-    react: "🧾",
+    react: "📋",
     filename: __filename
-}, async (conn, mek, m, { from, reply }) => {
+}, async (conn, mek, m, { from, pushname, reply, sender }) => {
     try {
         // Count total commands
         const totalCommands = Object.keys(commands).length;
         
         const menuCaption = `*╭┈───────────────•*
-*│  ◦* ʀᴜɴᴛɪᴍᴇ : ${runtime(process.uptime())}
-*│  ◦* ʀᴀᴍ ᴜꜱᴀɢᴇ : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
-*│  ◦* ᴍᴏᴅᴇ : *[${config.MODE}]*
-*│  ◦* ᴘʀᴇғɪx : *[${config.PREFIX}]*
-*│  ◦* ᴄᴍᴅs : *${totalCommands}*
+*〈 Hello *${pushname}* Welcome*   
 *╰┈───────────────•*
-
-*╭━〈 ✦${config.BOT_NAME}✦ 〉━◆*
+*╭┈───────────────•*
+*│  ◦* Runtime : ${runtime(process.uptime())}
+*│  ◦* RAM Usage : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
+*│  ◦* Mode : *[${config.MODE}]*
+*│  ◦* Prefix : *[${config.PREFIX}]*
+*│  ◦* Commands : *${totalCommands}*
+*╰┈───────────────•*
+*◆─〈 ✦${config.BOT_NAME}✦ 〉─◆*
+*╭┈───────────────•*
 *├ 1* •  *OWNER*
-*├ 2* • *DOWNLOAD‎*
+*├ 2* • *DOWNLOAD*
 *├ 3* • *GROUPS*
 *├ 4* • *INFO*
 *├ 5* • *RANDOM*
@@ -33,293 +36,236 @@ cmd({
 *├ 7* • *AI*
 *├ 8* • *WALLPAPERS*
 *├ 9* • *OTHER*
+*├ 10* • *MAIN*
 *╰┈───────────────•*
 
 *Reply With Number You want*
 
-> ${config.DESCRIPTION}`;
+> *${config.BOT_NAME}*`;
 
-        const contextInfo = {
-            mentionedJid: [m.sender],
-            forwardingScore: 999,
-            isForwarded: true,
-            forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363299029326322@newsletter',
-                newsletterName: config.OWNER_NAME,
-                serverMessageId: 143
+        const vv = await conn.sendMessage(from, { 
+            image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/7zfdcq.jpg' }, 
+            caption: menuCaption, 
+            contextInfo: {
+                mentionedJid: [m.sender], 
+                groupMentions: [],
+                forwardingScore: 999,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                    newsletterJid: '120363354023106228@newsletter',
+                    newsletterName: '𝖒𝖆𝖗𝖎𝖘𝖊𝖑',
+                    serverMessageId: 143
+                },
+                externalAdReply: { 
+                    title: '𝖒𝖆𝖗𝖎𝖘𝖊𝖑', 
+                    body: '𝖒𝖆𝖗𝖎𝖘𝖊𝖑', 
+                    mediaType: 1, 
+                    sourceUrl: "https://whatsapp.com/channel/0029Vak2PevK0IBh2pKJPp2K", 
+                    thumbnailUrl: "https://files.catbox.moe/7zfdcq.jpg",
+                    renderLargerThumbnail: true,
+                    showAdAttribution: true
+                }
             }
-        };
+        }, { quoted: mek });
 
-        // Function to send menu image with timeout
-        const sendMenuImage = async () => {
-            try {
-                return await conn.sendMessage(
-                    from,
-                    {
-                        image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/avqa3c.jpg' },
-                        caption: menuCaption,
-                        contextInfo: contextInfo
-                    },
-                    { quoted: mek }
-                );
-            } catch (e) {
-                console.log('Image send failed, falling back to text');
-                return await conn.sendMessage(
-                    from,
-                    { text: menuCaption, contextInfo: contextInfo },
-                    { quoted: mek }
-                );
-            }
-        };
+        const messageID = vv.key.id;
 
-        // Send image with timeout
-        let sentMsg;
-        try {
-            sentMsg = await Promise.race([
-                sendMenuImage(),
-                new Promise((_, reject) => setTimeout(() => reject(new Error('Image send timeout')), 10000))
-            ]);
-        } catch (e) {
-            console.log('Menu send error:', e);
-            sentMsg = await conn.sendMessage(
-                from,
-                { text: menuCaption, contextInfo: contextInfo },
-                { quoted: mek }
-            );
-        }
-        
-        const messageID = sentMsg.key.id;
-
-        // Menu data (complete version)
+        // Menu data with updated format
         const menuData = {
             '1': {
-                title: "📥 *Download Menu* 📥",
-                content: `*DOWNLOADER-CMD*                        
+                content: `*OWNER COMMANDS*
 *╭┈───────────────•*
-*┋* *.ғʙ*
-*┋* *.ɪɴꜱᴛᴀ*
-*┋* *.ᴠɪᴅᴇᴏ*
-*┋* *.ɢᴅʀɪᴠᴇ*
-*┋* *.ᴛᴡɪᴛᴛᴇʀ*
-*┋* *.ᴛᴛ*
-*┋* *.ᴍᴇᴅɪᴀғɪʀᴇ*
-*┋* *.ꜱᴏɴɢ*
-*┋* *.ᴘʟᴀʏ*
-*┋* *.ᴠɪᴅᴇᴏ*
-*┋* *.ᴠɪᴅᴇᴏ2*
-*┋* *.ɪᴍɢ*
-*┋* *.ᴀᴘᴋ*
-*┋* *.ᴅᴀʀᴀᴍᴀ*
-*┋* *.ᴘʟᴀʏ2*
-*┋* *.ʙᴀɪsᴄᴏᴘᴇ*
-*┋* *.ɢɪɴɪsɪsɪʟᴀ*
-*╰┈───────────────•*
-> ${config.DESCRIPTION}`,
-                image: true
-            },
-            '2': {
-                title: "👥 *Group Menu* 👥",
-                content: `*GROUP-CMD*
-*╭┈───────────────•*
-*┋* *.ʀᴇᴍᴏᴠᴇ*
-*┋* *.ᴅᴇʟᴇᴛᴇ*
-*┋* *.ᴀᴅᴅ*
-*┋* *.ᴋɪᴄᴋ*
-*┋* *.ᴋɪᴄᴋᴀʟʟ*
-*┋* *.sᴇᴛɢᴏᴏᴅʙʏᴇ*
-*┋* *.sᴇᴛᴡᴇʟᴄᴏᴍᴇ*
-*┋* *.ᴘʀᴏᴍᴏᴛᴇ*
-*┋* *.ᴅᴇᴍᴏᴛᴇ*
-*┋* *.ᴛᴀɢᴀʟʟ*
-*┋* *.ɢᴇᴛᴘɪᴄ*
-*┋* *.ɪɴᴠɪᴛᴇ*
-*┋* *.ʀᴇᴠᴏᴋᴇ*
-*┋* *.ᴊᴏɪɴʀᴇǫᴜᴇsᴛs*
-*┋* *.ᴀʟʟʀᴇǫ*
-*┋* *.ᴍᴜᴛᴇ*
-*┋* *.ᴜɴᴍᴜᴛᴇ*
-*┋* *.ʟᴏᴄᴋɢᴄ*
-*┋* *.ᴜɴʟᴏᴄᴋɢᴄ*
-*┋* *.ʟᴇᴀᴠᴇ*
-*┋* *.ᴜᴘᴅᴀᴛᴇɢɴᴀᴍᴇ*
-*┋* *.ᴜᴘᴅᴀᴛᴇɢᴅᴇsᴄ*
-*┋* *.ᴊᴏɪɴ*
-*┋* *.ʜɪᴅᴇᴛᴀɢ*
-*┋* *.ɢɪɴғᴏ*
-*┋* *.ᴅɪsᴀᴘᴘᴇᴀʀ ᴏɴ*
-*┋* *.ᴅɪsᴀᴘᴘᴇᴀʀ ᴏғғ*
-*┋* *.ᴅɪsᴀᴘᴘᴇᴀʀ 7ᴅ 24ʜ 90ᴅ*
-*┋* *.sᴇɴᴅᴅᴍ*
-*╰┈───────────────•*
-> ${config.DESCRIPTION}`,
-                image: true
-            },
-            '4': {
-                title: "👑 *Owner Menu* 👑",
-                content: `*OWNER-CMD*
-*╭┈───────────────•*
-*┋* *.ᴜᴘᴅᴀᴛᴇᴄᴍᴅ*
-*┋* *.sᴇᴛᴛɪɴɢs*
-*┋* *.ᴏᴡɴᴇʀ*
-*┋* *.ʀᴇᴘᴏ*
-*┋* *.ꜱʏꜱᴛᴇᴍ*
-*┋* *.ꜱᴛᴀᴛᴜꜱ*
-*┋* *.ʙʟᴏᴄᴋ*
-*┋* *.ᴜɴʙʟᴏᴄᴋ*
-*┋* *.sʜᴜᴛᴅᴏᴡɴ*
-*┋* *.ᴄʟᴇᴀʀᴄʜᴀᴛs*
-*┋* *.sᴇᴛᴘᴘ*
-*┋* *.ʙʀᴏᴀᴅᴄᴀsᴛ*
-*┋* *.ᴊɪᴅ*
-*┋* *.ɢᴊɪᴅ*
-*┋* *.ʀᴇꜱᴛᴀʀᴛ*
-*╰┈───────────────•*
-> ${config.DESCRIPTION}`,
-                image: true
-            },
-            '5': {
-                title: "🤖 *AI Menu* 🤖",
-                content: `*AI-CMD *
-*╭┈───────────────•*
-*┋* *.ɢᴘᴛ <ᴛᴇxᴛ>*
-*┋* *.ᴀɪ <ᴛᴇxᴛ>*
-*┋* *.ʙᴏᴛ <ᴛᴇxᴛ>*
+*┋* *.updatecmd*
+*┋* *.settings*
+*┋* *.owner*
+*┋* *.repo*
+*┋* *.system*
+*┋* *.status*
+*┋* *.block*
+*┋* *.unblock*
+*┋* *.shutdown*
+*┋* *.clearchats*
+*┋* *.setpp*
+*┋* *.broadcast*
+*┋* *.jid*
+*┋* *.gjid*
+*┋* *.restart*
 *╰┈───────────────•*
 
-> ${config.DESCRIPTION}`,
-                image: true
+> *${config.BOT_NAME}*`
+            },
+            '2': {
+                content: `*DOWNLOADER COMMANDS*
+*╭┈───────────────•*
+*┋* *.facebook [url]*
+*┋* *.mediafire [url]*
+*┋* *.tiktok [url]*
+*┋* *.twitter [url]*
+*┋* *.insta [url]*
+*┋* *.apk [app]*
+*┋* *.img [query]*
+*┋* *.tt2 [url]*
+*┋* *.pins [url]*
+*┋* *.apk2 [app]*
+*┋* *.fb2 [url]*
+*┋* *.pinterest [url]*
+*┋* *.spotify [query]*
+*┋* *.play [song]*
+*┋* *.play2-10 [song]*
+*┋* *.audio [url]*
+*┋* *.video [url]*
+*┋* *.video2-10 [url]*
+*┋* *.ytmp3 [url]*
+*┋* *.ytmp4 [url]*
+*┋* *.song [name]*
+*┋* *.drama [name]*
+*╰┈───────────────•*
+
+> *${config.BOT_NAME}*`
+            },
+            '3': {
+                content: `*GROUP COMMANDS*
+*╭┈───────────────•*
+*┋* *.grouplink*
+*┋* *.kickall*
+*┋* *.kickall2*
+*┋* *.kickall3*
+*┋* *.add @user*
+*┋* *.remove @user*
+*┋* *.kick @user*
+*┋* *.promote @user*
+*┋* *.demote @user*
+*┋* *.dismiss*
+*┋* *.revoke*
+*┋* *.mute [time]*
+*┋* *.unmute*
+*┋* *.lockgc*
+*┋* *.unlockgc*
+*┋* *.tag @user*
+*┋* *.hidetag [msg]*
+*┋* *.tagall*
+*┋* *.tagadmins*
+*┋* *.invite*
+*╰┈───────────────•*
+
+> *${config.BOT_NAME}*`
+            },
+            '4': {
+                content: `*INFO COMMANDS*
+*╭┈───────────────•*
+*┋* *.menu*
+*┋* *.menu2*
+*┋* *.menu3*
+*┋* *.about*
+*┋* *.script*
+*┋* *.repo*
+*┋* *.alive*
+*┋* *.botinfo*
+*┋* *.status*
+*┋* *.support*
+*┋* *.ping*
+*┋* *.ping2*
+*┋* *.system*
+*╰┈───────────────•*
+
+> *${config.BOT_NAME}*`
+            },
+            '5': {
+                content: `*RANDOM COMMANDS*
+*╭┈───────────────•*
+*┋* *.king*
+*┋* *.dog*
+*┋* *.anime*
+*┋* *.animegirl*
+*┋* *.animegirl1-5*
+*┋* *.anime1-5*
+*┋* *.foxgirl*
+*┋* *.naruto*
+*╰┈───────────────•*
+
+> *${config.BOT_NAME}*`
             },
             '6': {
-                title: "🎎 *Anime Menu* 🎎",
-                content: `╭━━━〔 *Anime Menu* 〕━━━┈⊷
-┃★╭──────────────
-┃★│ 🖼️ *Images*
-┃★│ • fack
-┃★│ • dog
-┃★│ • awoo
-┃★│ • garl
-┃★│ • waifu
-┃★│ • neko
-┃★│ • megnumin
-┃★│ • maid
-┃★│ • loli
-┃★╰──────────────
-┃★╭──────────────
-┃★│ 🎭 *Characters*
-┃★│ • animegirl
-┃★│ • animegirl1-5
-┃★│ • anime1-5
-┃★│ • foxgirl
-┃★│ • naruto
-┃★╰──────────────
-╰━━━━━━━━━━━━━━━┈⊷
-> ${config.DESCRIPTION}`,
-                image: true
+                content: `*CONVERTER COMMANDS*
+*╭┈───────────────•*
+*┋* *.sticker [img]*
+*┋* *.sticker2 [img]*
+*┋* *.emojimix 😎+😂*
+*┋* *.take [name,text]*
+*┋* *.tomp3 [video]*
+*┋* *.fancy [text]*
+*┋* *.tts [text]*
+*┋* *.trt [text]*
+*┋* *.base64 [text]*
+*┋* *.unbase64 [text]*
+*╰┈───────────────•*
+
+> *${config.BOT_NAME}*`
             },
             '7': {
-                title: "🔄 *Convert Menu* 🔄",
-                content: `╭━━━〔 *Convert Menu* 〕━━━┈⊷
-┃★╭──────────────
-┃★│ 🖼️ *Media*
-┃★│ • sticker [img]
-┃★│ • sticker2 [img]
-┃★│ • emojimix 😎+😂
-┃★│ • take [name,text]
-┃★│ • tomp3 [video]
-┃★╰──────────────
-┃★╭──────────────
-┃★│ 📝 *Text*
-┃★│ • fancy [text]
-┃★│ • tts [text]
-┃★│ • trt [text]
-┃★│ • base64 [text]
-┃★│ • unbase64 [text]
-┃★╰──────────────
-╰━━━━━━━━━━━━━━━┈⊷
-> ${config.DESCRIPTION}`,
-                image: true
+                content: `*AI COMMANDS*
+*╭┈───────────────•*
+*┋* *.ai [query]*
+*┋* *.gpt3 [query]*
+*┋* *.gpt2 [query]*
+*┋* *.gptmini [query]*
+*┋* *.gpt [query]*
+*┋* *.meta [query]*
+*┋* *.imagine [text]*
+*┋* *.imagine2 [text]*
+*┋* *.blackbox [query]*
+*┋* *.luma [query]*
+*┋* *.dj [query]*
+*┋* *.khan [query]*
+*╰┈───────────────•*
+
+> *${config.BOT_NAME}*`
             },
             '8': {
-                title: "📌 *Other Menu* 📌",
-                content: `╭━━━〔 *Other Menu* 〕━━━┈⊷
-┃★╭──────────────
-┃★│ 🕒 *Utilities*
-┃★│ • timenow
-┃★│ • date
-┃★│ • count [num]
-┃★│ • calculate [expr]
-┃★│ • countx
-┃★╰──────────────
-┃★╭──────────────
-┃★│ 🎲 *Random*
-┃★│ • flip
-┃★│ • coinflip
-┃★│ • rcolor
-┃★│ • roll
-┃★│ • fact
-┃★╰──────────────
-┃★╭──────────────
-┃★│ 🔍 *Search*
-┃★│ • define [word]
-┃★│ • news [query]
-┃★│ • movie [name]
-┃★│ • weather [loc]
-┃★╰──────────────
-╰━━━━━━━━━━━━━━━┈⊷
-> ${config.DESCRIPTION}`,
-                image: true
+                content: `*WALLPAPERS COMMANDS*
+*╭┈───────────────•*
+*┋* *.img*
+*╰┈───────────────•*
+
+> *${config.BOT_NAME}*`
             },
             '9': {
-                title: "💞 *Reactions Menu* 💞",
-                content: `╭━━━〔 *Reactions Menu* 〕━━━┈⊷
-┃★╭──────────────
-┃★│ ❤️ *Affection*
-┃★│ • cuddle @user
-┃★│ • hug @user
-┃★│ • kiss @user
-┃★│ • lick @user
-┃★│ • pat @user
-┃★╰──────────────
-┃★╭──────────────
-┃★│ 😂 *Funny*
-┃★│ • bully @user
-┃★│ • bonk @user
-┃★│ • yeet @user
-┃★│ • slap @user
-┃★│ • kill @user
-┃★╰──────────────
-┃★╭──────────────
-┃★│ 😊 *Expressions*
-┃★│ • blush @user
-┃★│ • smile @user
-┃★│ • happy @user
-┃★│ • wink @user
-┃★│ • poke @user
-┃★╰──────────────
-╰━━━━━━━━━━━━━━━┈⊷
-> ${config.DESCRIPTION}`,
-                image: true
+                content: `*OTHER COMMANDS*
+*╭┈───────────────•*
+*┋* *.timenow*
+*┋* *.date*
+*┋* *.count [num]*
+*┋* *.calculate [expr]*
+*┋* *.countx*
+*┋* *.flip*
+*┋* *.coinflip*
+*┋* *.rcolor*
+*┋* *.roll*
+*┋* *.fact*
+*┋* *.define [word]*
+*┋* *.news [query]*
+*┋* *.movie [name]*
+*┋* *.weather [loc]*
+*╰┈───────────────•*
+
+> *${config.BOT_NAME}*`
             },
             '10': {
-                title: "🏠 *Main Menu* 🏠",
-                content: `*MAIN MENU*
+                content: `*MAIN COMMANDS*
 *╭┈───────────────•*
-*┋* *.ᴍᴇɴᴜ*
-*┋* *.ᴍᴇɴᴜ2*
-*┋* *.ᴍᴇɴᴜ3*
-*┋* *.ᴀʙᴏᴜᴛ*
-*┋* *.sᴄʀɪᴘᴛ*
-*┋* *.ʀᴇᴘᴏ*
-*┋* *.ᴀʟɪᴠᴇ*
-*┋* *.ʙᴏᴛɪɴꜰᴏ*
-*┋* *.ꜱᴛᴀᴛᴜꜱ*
-*┋* *.ꜱᴜᴘᴘᴏʀᴛ*
-*┋* *.ᴘɪɴɢ*
-*┋* *.ᴘɪɴɢ2*
-*┋* *.ꜱʏꜱᴛᴇᴍ*
+*┋* *.ping*
+*┋* *.live*
+*┋* *.alive*
+*┋* *.runtime*
+*┋* *.uptime*
+*┋* *.repo*
+*┋* *.owner*
+*┋* *.menu*
+*┋* *.menu2*
+*┋* *.restart*
 *╰┈───────────────•*
-> ${config.DESCRIPTION}`,
-                image: true
+
+> *${config.BOT_NAME}*`
             }
         };
 
@@ -340,23 +286,19 @@ cmd({
                         const selectedMenu = menuData[receivedText];
                         
                         try {
-                            if (selectedMenu.image) {
-                                await conn.sendMessage(
-                                    senderID,
-                                    {
-                                        image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/avqa3c.jpg' },
-                                        caption: selectedMenu.content,
-                                        contextInfo: contextInfo
-                                    },
-                                    { quoted: receivedMsg }
-                                );
-                            } else {
-                                await conn.sendMessage(
-                                    senderID,
-                                    { text: selectedMenu.content, contextInfo: contextInfo },
-                                    { quoted: receivedMsg }
-                                );
-                            }
+                            await conn.sendMessage(
+                                senderID,
+                                { 
+                                    image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/7zfdcq.jpg' },
+                                    caption: selectedMenu.content,
+                                    contextInfo: {
+                                        mentionedJid: [sender],
+                                        forwardingScore: 999,
+                                        isForwarded: true
+                                    }
+                                },
+                                { quoted: receivedMsg }
+                            );
 
                             await conn.sendMessage(senderID, {
                                 react: { text: '✅', key: receivedMsg.key }
@@ -366,7 +308,14 @@ cmd({
                             console.log('Menu reply error:', e);
                             await conn.sendMessage(
                                 senderID,
-                                { text: selectedMenu.content, contextInfo: contextInfo },
+                                { 
+                                    text: selectedMenu.content,
+                                    contextInfo: {
+                                        mentionedJid: [sender],
+                                        forwardingScore: 999,
+                                        isForwarded: true
+                                    }
+                                },
                                 { quoted: receivedMsg }
                             );
                         }
@@ -375,8 +324,12 @@ cmd({
                         await conn.sendMessage(
                             senderID,
                             {
-                                text: `❌ *Invalid Option!* ❌\n\nPlease reply with a number between 1-10 to select a menu.\n\n*Example:* Reply with "1" for Download Menu\n\n> ${config.DESCRIPTION}`,
-                                contextInfo: contextInfo
+                                text: `*╭┈───────────────•*\n*┋* Invalid Option!\n*┋* Please reply with number 1-10\n*╰┈───────────────•*\n\n> ${config.BOT_NAME}`,
+                                contextInfo: {
+                                    mentionedJid: [sender],
+                                    forwardingScore: 999,
+                                    isForwarded: true
+                                }
                             },
                             { quoted: receivedMsg }
                         );
@@ -400,7 +353,14 @@ cmd({
         try {
             await conn.sendMessage(
                 from,
-                { text: `❌ Menu system is currently busy. Please try again later.\n\n> ${config.DESCRIPTION}` },
+                { 
+                    text: `*╭┈───────────────•*\n*┋* Menu system busy\n*┋* Try again later\n*╰┈───────────────•*\n\n> ${config.BOT_NAME}`,
+                    contextInfo: {
+                        mentionedJid: [sender],
+                        forwardingScore: 999,
+                        isForwarded: true
+                    }
+                },
                 { quoted: mek }
             );
         } catch (finalError) {
