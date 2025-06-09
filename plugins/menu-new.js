@@ -8,7 +8,7 @@ cmd({
     pattern: "menu",
     desc: "Show interactive menu system",
     category: "menu",
-    react: "📋",
+    react: "🫩",
     filename: __filename
 }, async (conn, mek, m, { from, pushname, reply, sender }) => {
     try {
@@ -16,7 +16,7 @@ cmd({
         const totalCommands = Object.keys(commands).length;
         
         const menuCaption = `*╭┈───────────────•*
-*〈 Hello *${pushname}* Welcome*   
+*〈 Holla ${pushname} Welcome*   
 *╰┈───────────────•*
 *╭┈───────────────•*
 *│  ◦* *Runtime : ${runtime(process.uptime())}*
@@ -44,7 +44,7 @@ cmd({
 > *${config.BOT_NAME}*`;
 
         const vv = await conn.sendMessage(from, { 
-            image: { url: 'https://files.catbox.moe/zzcckn.jpg' }, 
+            image: { url: 'https://files.catbox.moe/avqa3c.jpg' }, 
             caption: menuCaption, 
             contextInfo: {
                 mentionedJid: [m.sender], 
