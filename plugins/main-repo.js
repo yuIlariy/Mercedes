@@ -1,67 +1,119 @@
-const config = require('../config')
-const {cmd , commands} = require('../command')
-const os = require("os")
-const {runtime} = require('../lib/functions')
-const axios = require('axios')
-const {sleep} = require('../lib/functions')
+const fs = require('fs');
+const config = require('../config');
+const { cmd, commands } = require('../command');
+const axios = require('axios');
 
 cmd({
     pattern: "repo",
-    alias: ["sc", "script", "repository"],
-    desc: "Fetch information about a GitHub repository.",
-    react: "📂",
+    desc: "Show information about the Mercedes repository",
     category: "info",
-    filename: __filename,
-},
-async (conn, mek, m, { from, reply }) => {
-    const githubRepoURL = 'https://github.com/betingrich4/Mercedes';
-
+    react: "♥️",
+    filename: __filename
+}, async (conn, mek, m, { from, pushname, reply, sender }) => {
     try {
-        // Extract username and repo name from the URL
-        const [, username, repoName] = githubRepoURL.match(/github\.com\/([^/]+)\/([^/]+)/);
-
-        // Fetch repository details using GitHub API with axios
-        const response = await axios.get(`https://api.github.com/repos/${username}/${repoName}`);
-        
+        // Fetch repository data from GitHub API
+        const repoUrl = 'https://api.github.com/repos/betingrich4/Mercedes';
+        const response = await axios.get(repoUrl, {
+            headers: {
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
         const repoData = response.data;
 
-        // Format the repository information in new stylish format
-        const formattedInfo = `
-╭─〔 *MERCEDES REPOSITORY* 〕
-│
-├─ *📌 Repository Name:* ${repoData.name}
-├─ *👑 Owner:* Marisel 
-├─ *⭐ Stars:* ${repoData.stargazers_count}
-├─ *⑂ Forks:* ${repoData.forks_count}
-├─ *📝 Description:* ${repoData.description || 'null'}
-├─ *🔗 GitHub Link:*
-│   ${repoData.html_url}
-├─ *🌐 Join Channel:*
-│   https://whatsapp.com/channel/0029VatOy2EAzNc2WcShQw1j
-│
-╰─ *Made By Marisel*
-`.trim();
+        // Format last update date
+        const lastUpdate = new Date(repoData.pushed_at).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
 
-        // Send an image with the formatted info as a caption
-        await conn.sendMessage(from, {
-            image: { url: `https://files.catbox.moe/7zfdcq.jpg` }, // Replace with your image URL
-            caption: formattedInfo,
-            contextInfo: { 
-                mentionedJid: [m.sender],
-                forwardingScore: 999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363299029326322@newsletter',
-                    newsletterName: '𝖒𝖆𝖗𝖎𝖘𝖊𝖑',
-                    serverMessageId: 143
-                }
+        // Construct repository info caption
+        const repoCaption = `*╭┈───────────────•*
+*〈 Repository Info*   
+*╰┈───────────────•*
+*╭┈───────────────•*
+*┋*  ◦* ʀᴇᴘᴏ : *${repoData.name}*
+*┋*  ◦* ᴏᴡɴᴇʀ : *${repoData.owner.login}*
+*┋*  ◦* ꜱᴛᴀʀꜱ : *${repoData.stargazers_count}*
+*┋*  ◦* ғᴏʀᴋꜱ : *${repoData.forks_count}*
+*┋*  ◦* ʟᴀꜱᴛ ᴜᴘᴅᴀᴛᴇ : *${lastUpdate}*
+*┋*  ◦* ᴅᴇꜱᴄʀɪᴘᴛɪᴏɴ : *${repoData.description || 'No description available'}*
+*╰┈───────────────•*
+*◆─〈 ✦${config.BOT_NAME}✦ 〉─◆*
+
+> *${config.BOT_NAME}*`;
+
+        const contextInfo = {
+            mentionedJid: [sender],
+            groupMentions: [],
+            forwardingScore: 999,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363299029326322@newsletter',
+                newsletterName: "𝖒𝖆𝖗𝖎𝖘𝖊𝖑",
+                serverMessageId: 999
+            },
+            externalAdReply: {
+                title: '𝖒𝖆𝖗𝖎𝖘𝖊𝖑',
+                body: `${pushname}`,
+                mediaType: 1,
+                sourceUrl: "https://whatsapp.com/channel/0029Vak2PevK0IBh2pKJPp2K",
+                thumbnailUrl: "https://files.catbox.moe/tpzqtm.jpg",
+                renderLargerThumbnail: true,
+                showAdAttribution: true
             }
-        }, { quoted: mek });
+        };
 
-    } catch (error) {
-        console.error("Error in repo command:", error);
-        reply("❌ Sorry, something went wrong while fetching the repository information. Please try again later.");
+        // Function to send repo info with image
+        const sendRepoImage = async () => {
+            try {
+                return await conn.sendMessage(
+                    from,
+                    {
+                        image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/tpzqtm.jpg' },
+                        caption: repoCaption,
+                        contextInfo: contextInfo
+                    },
+                    { quoted: mek }
+                );
+            } catch (e) {
+                console.log('Image send failed, falling back to text');
+                return await conn.sendMessage(
+                    from,
+                    { text: repoCaption, contextInfo: contextInfo },
+                    { quoted: mek }
+                );
+            }
+        };
+
+        // Send image with timeout
+        try {
+            await Promise.race([
+                sendRepoImage(),
+                new Promise((_, reject) => setTimeout(() => reject(new Error('Image send timeout')), 10000))
+            ]);
+        } catch (e) {
+            console.log('Repo info send error:', e);
+            await conn.sendMessage(
+                from,
+                { text: repoCaption, contextInfo: contextInfo },
+                { quoted: mek }
+            );
+        }
+
+    } catch (e) {
+        console.error('Repo Error:', e);
+        try {
+            await conn.sendMessage(
+                from,
+                {
+                    text: `❌ Unable to fetch repository info. Please try again later.\n\n> ${config.BOT_NAME}`,
+                    contextInfo: contextInfo
+                },
+                { quoted: mek }
+            );
+        } catch (finalError) {
+            console.log('Final error handling failed:', finalError);
+        }
     }
 });
-
-
