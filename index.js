@@ -68,6 +68,7 @@ const {
   //===================SESSION-AUTH============================
 if (!fs.existsSync(__dirname + '/sessions/creds.json')) {
 if(!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!')
+const sessdata = config.SESSION_ID.replace("IK~", '');
 const filer = File.fromURL(`https://mega.nz/file/${sessdata}`)
 filer.download((err, data) => {
 if(err) throw err
@@ -118,8 +119,20 @@ const port = process.env.PORT || 9090;
 │    https://whatsapp.com/channel/0029Vajvy2kEwEjwAKP4SI0x 
 ╰─ *Made By Marisel*
 > *Report any error to the dev*`;
-    conn.sendMessage(conn.user.id, { image: { url: `https://files.catbox.moe/avqa3c.jpg` }, caption: up })
-  }
+      conn.sendMessage(conn.user.id, { 
+        image: { url: `https://files.catbox.moe/avqa3c.jpg` }, 
+        caption: up,
+        contextInfo: {
+          forwardingScore: 999,
+          isForwarded: true,
+          forwardedNewsletterMessageInfo: {
+            newsletterJid: '120363354023106228@newsletter',
+            newsletterName: '𝖒𝖆𝖗𝖎𝖘𝖊𝖑',
+            serverMessageId: 143
+          }
+        }
+      })
+    }
   })
   conn.ev.on('creds.update', saveCreds)
 
