@@ -19,11 +19,11 @@ cmd({
 *〈 Hello *${pushname}* Welcome*   
 *╰┈───────────────•*
 *╭┈───────────────•*
-*│  ◦* Runtime : ${runtime(process.uptime())}
-*│  ◦* RAM Usage : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
-*│  ◦* Mode : *[${config.MODE}]*
-*│  ◦* Prefix : *[${config.PREFIX}]*
-*│  ◦* Commands : *${totalCommands}*
+*│  ◦* *Runtime : ${runtime(process.uptime())}*
+*│  ◦* *RAM Usage : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB*
+*│  ◦* *Mode : [${config.MODE}]*
+*│  ◦* *Prefix : [${config.PREFIX}]*
+*│  ◦* *Commands : ${totalCommands}*
 *╰┈───────────────•*
 *◆─〈 ✦${config.BOT_NAME}✦ 〉─◆*
 *╭┈───────────────•*
@@ -44,7 +44,7 @@ cmd({
 > *${config.BOT_NAME}*`;
 
         const vv = await conn.sendMessage(from, { 
-            image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/zzcckn.jpg' }, 
+            image: { url: 'https://files.catbox.moe/zzcckn.jpg' }, 
             caption: menuCaption, 
             contextInfo: {
                 mentionedJid: [m.sender], 
@@ -289,7 +289,7 @@ cmd({
                             await conn.sendMessage(
                                 senderID,
                                 { 
-                                    image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/6oehgp.jpg' },
+                                    image: { url: 'https://files.catbox.moe/avqa3c.jpg' },
                                     caption: selectedMenu.content,
                                     contextInfo: {
                                         mentionedJid: [sender],
