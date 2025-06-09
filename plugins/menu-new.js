@@ -44,7 +44,7 @@ cmd({
 > *${config.BOT_NAME}*`;
 
         const vv = await conn.sendMessage(from, { 
-            image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/7zfdcq.jpg' }, 
+            image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/zzcckn.jpg' }, 
             caption: menuCaption, 
             contextInfo: {
                 mentionedJid: [m.sender], 
@@ -61,7 +61,7 @@ cmd({
                     body: '𝖒𝖆𝖗𝖎𝖘𝖊𝖑', 
                     mediaType: 1, 
                     sourceUrl: "https://whatsapp.com/channel/0029Vak2PevK0IBh2pKJPp2K", 
-                    thumbnailUrl: "https://files.catbox.moe/7zfdcq.jpg",
+                    thumbnailUrl: "https://files.catbox.moe/6oehgp.jpg",
                     renderLargerThumbnail: true,
                     showAdAttribution: true
                 }
@@ -289,7 +289,7 @@ cmd({
                             await conn.sendMessage(
                                 senderID,
                                 { 
-                                    image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/7zfdcq.jpg' },
+                                    image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/6oehgp.jpg' },
                                     caption: selectedMenu.content,
                                     contextInfo: {
                                         mentionedJid: [sender],
