@@ -8,7 +8,7 @@ cmd({
     pattern: "menu",
     desc: "Show interactive menu system",
     category: "menu",
-    react: "🫩",
+    react: "✌️",
     filename: __filename
 }, async (conn, mek, m, { from, pushname, reply, sender }) => {
     try {
@@ -45,15 +45,22 @@ cmd({
 
         const contextInfo = {
             mentionedJid: [sender],
+            groupMentions: [],
             forwardingScore: 999,
             isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363299029326322@newsletter',
+                newsletterName: "𝖒𝖆𝖗𝖎𝖘𝖊𝖑",
+                serverMessageId: 999
+            },
             externalAdReply: {
-                title: config.BOT_NAME,
-                body: pushname,
+                title: '𝖒𝖆𝖗𝖎𝖘𝖊𝖑',
+                body: `${pushname}`,
                 mediaType: 1,
-                thumbnailUrl: config.MENU_IMAGE_URL || 'https://files.catbox.moe/tpzqtm.jpg',
-                sourceUrl: config.SUPPORT_LINK || 'https://whatsapp.com/channel/0029Vak2PevK0IBh2pKJPp2K',
-                renderLargerThumbnail: true
+                sourceUrl: "https://whatsapp.com/channel/0029Vak2PevK0IBh2pKJPp2K",
+                thumbnailUrl: "https://files.catbox.moe/tpzqtm.jpg",
+                renderLargerThumbnail: true,
+                showAdAttribution: true
             }
         };
 
@@ -159,137 +166,6 @@ cmd({
 > *${config.BOT_NAME}*`,
                 image: true
             },
-            '3': {
-                title: "😄 *Fun Menu* 😄",
-                content: `*FUN-CMD*
-*╭┈───────────────•*
-*┋* *.ꜱʜᴀᴘᴀʀ*
-*┋* *.ʀᴀᴛᴇ*
-*┋* *.ɪɴꜱᴜʟᴛ*
-*┋* *.ʜᴀᴄᴋ*
-*┋* *.ꜱʜɪᴘ*
-*┋* *.ᴄʜᴀʀᴀᴄᴛᴇʀ*
-*┋* *.ᴘɪᴄᴋᴜᴘ*
-*┋* *.ᴊᴏᴋᴇ*
-*┋* *.ʜʀᴛ*
-*┋* *.ʜᴘʏ*
-*┋* *.ꜱʏᴅ*
-*┋* *.ᴀɴɢᴇʀ*
-*┋* *.ꜱʜʏ*
-*┋* *.ᴋɪꜱꜱ*
-*┋* *.ᴍᴏɴ*
-*┋* *.ᴄᴜɴғᴜᴢᴇᴅ*
-*╰┈───────────────•*
-
-> *${config.BOT_NAME}*`,
-                image: true
-            },
-            '4': {
-                title: "👑 *Owner Menu* 👑",
-                content: `*OWNER-CMD*
-*╭┈───────────────•*
-*┋* *.ʙʟᴏᴄᴋ*
-*┋* *.ᴜɴʙʟᴏᴄᴋ*
-*┋* *.ғᴜʟʟᴘᴘ*
-*┋* *.ꜱᴇᴛᴘᴘ*
-*┋* *.ʀᴇꜱᴛᴀʀᴛ*
-*┋* *.ꜱʜᴜᴛᴅᴏᴡɴ*
-*┋* *.ᴜᴘᴅᴀᴛᴇᴄᴍᴅ*
-*┋* *.ɢᴊɪᴅ*
-*┋* *.ᴊɪᴅ*
-*┋* *.ʟɪꜱᴛᴄᴍᴅ*
-*┋* *.ᴀʟʟᴍᴇɴᴜ*
-*╰┈───────────────•*
-
-> *${config.BOT_NAME}*`,
-                image: true
-            },
-            '5': {
-                title: "🤖 *AI Menu* 🤖",
-                content: `*AI-CMD*
-*╭┈───────────────•*
-*┋* *.ᴀɪ*
-*┋* *.ɢᴘᴛ3*
-*┋* *.ɢᴘᴛ2*
-*┋* *.ɢᴘᴛᴍɪɴɪ*
-*┋* *.ɢᴘᴛ*
-*┋* *.ᴍᴇᴛᴀ*
-*┋* *.ɪᴍᴀɢɪɴᴇ*
-*┋* *.ɪᴍᴀɢɪɴᴇ2*
-*┋* *.ʙʟᴀᴄᴋʙᴏx*
-*┋* *.ʟᴜᴍᴀ*
-*┋* *.ᴅᴊ*
-*┋* *.ᴋʜᴀɴ*
-*╰┈───────────────•*
-
-> *${config.BOT_NAME}*`,
-                image: true
-            },
-            '6': {
-                title: "🎎 *Anime Menu* 🎎",
-                content: `*ANIME-CMD*
-*╭┈───────────────•*
-*┋* *.ғᴀᴄᴋ*
-*┋* *.ᴅᴏɢ*
-*┋* *.ᴀᴡᴏᴏ*
-*┋* *.ɢᴀʀʟ*
-*┋* *.ᴡᴀɪғᴜ*
-*┋* *.ɴᴇᴋᴏ*
-*┋* *.ᴍᴇɢɴᴜᴍɪɴ*
-*┋* *.ᴍᴀɪᴅ*
-*┋* *.ʟᴏʟɪ*
-*┋* *.ᴀɴɪᴍᴇɢɪʀʟ*
-*┋* *.ᴀɴɪᴍᴇɢɪʀʟ1-5*
-*┋* *.ᴀɴɪᴍᴇ1-5*
-*┋* *.ғᴏxɢɪʀʟ*
-*┋* *.ɴᴀʀᴜᴛᴏ*
-*╰┈───────────────•*
-
-> *${config.BOT_NAME}*`,
-                image: true
-            },
-            '7': {
-                title: "🔄 *Convert Menu* 🔄",
-                content: `*CONVERTER-CMD*
-*╭┈───────────────•*
-*┋* *.ꜱᴛɪᴄᴋᴇʀ*
-*┋* *.ꜱᴛɪᴄᴋᴇʀ2*
-*┋* *.ᴇᴍᴏᴊɪᴍɪx 😎+😂*
-*┋* *.ᴛᴀᴋᴇ*
-*┋* *.ᴛᴏᴍᴘ3*
-*┋* *.ғᴀɴᴄʏ*
-*┋* *.ᴛᴛꜱ*
-*┋* *.ᴛʀᴛ*
-*┋* *.ʙᴀꜱᴇ64*
-*┋* *.ᴜɴʙᴀꜱᴇ64*
-*╰┈───────────────•*
-
-> *${config.BOT_NAME}*`,
-                image: true
-            },
-            '8': {
-                title: "📌 *Other Menu* 📌",
-                content: `*OTHER-CMD*
-*╭┈───────────────•*
-*┋* *.ᴛɪᴍᴇɴᴏᴡ*
-*┋* *.ᴅᴀᴛᴇ*
-*┋* *.ᴄᴏᴜɴᴛ*
-*┋* *.ᴄᴀʟᴄᴜʟᴀᴛᴇ*
-*┋* *.ᴄᴏᴜɴᴛx*
-*┋* *.ғʟɪᴘ*
-*┋* *.ᴄᴏɪɴғʟɪᴘ*
-*┋* *.ʀᴄᴏʟᴏʀ*
-*┋* *.ʀᴏʟʟ*
-*┋* *.ғᴀᴄᴛ*
-*┋* *.ᴅᴇғɪɴᴇ*
-*┋* *.ɴᴇᴡꜱ*
-*┋* *.ᴍᴏᴠɪᴇ*
-*┋* *.ᴡᴇᴀᴛʜᴇʀ*
-*╰┈───────────────•*
-
-> *${config.BOT_NAME}*`,
-                image: true
-            },
             '9': {
                 title: "💞 *Reactions Menu* 💞",
                 content: `*REACTIONS-CMD*
@@ -358,25 +234,14 @@ cmd({
                                     {
                                         image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/tpzqtm.jpg' },
                                         caption: selectedMenu.content,
-                                        contextInfo: {
-                                            mentionedJid: [sender],
-                                            forwardingScore: 999,
-                                            isForwarded: true
-                                        }
+                                        contextInfo: contextInfo
                                     },
                                     { quoted: receivedMsg }
                                 );
                             } else {
                                 await conn.sendMessage(
                                     senderID,
-                                    { 
-                                        text: selectedMenu.content,
-                                        contextInfo: {
-                                            mentionedJid: [sender],
-                                            forwardingScore: 999,
-                                            isForwarded: true
-                                        }
-                                    },
+                                    { text: selectedMenu.content, contextInfo: contextInfo },
                                     { quoted: receivedMsg }
                                 );
                             }
@@ -389,14 +254,7 @@ cmd({
                             console.log('Menu reply error:', e);
                             await conn.sendMessage(
                                 senderID,
-                                { 
-                                    text: selectedMenu.content,
-                                    contextInfo: {
-                                        mentionedJid: [sender],
-                                        forwardingScore: 999,
-                                        isForwarded: true
-                                    }
-                                },
+                                { text: selectedMenu.content, contextInfo: contextInfo },
                                 { quoted: receivedMsg }
                             );
                         }
@@ -406,11 +264,7 @@ cmd({
                             senderID,
                             {
                                 text: `❌ *Invalid Option!* ❌\n\nPlease reply with a number between 1-10 to select a menu.\n\n*Example:* Reply with "1" for Download Menu\n\n> ${config.BOT_NAME}`,
-                                contextInfo: {
-                                    mentionedJid: [sender],
-                                    forwardingScore: 999,
-                                    isForwarded: true
-                                }
+                                contextInfo: contextInfo
                             },
                             { quoted: receivedMsg }
                         );
@@ -434,13 +288,8 @@ cmd({
         try {
             await conn.sendMessage(
                 from,
-                { 
-                    text: `❌ Menu system is currently busy. Please try again later.\n\n> ${config.BOT_NAME}`,
-                    contextInfo: {
-                        mentionedJid: [sender],
-                        forwardingScore: 999,
-                        isForwarded: true
-                    }
+                { text: `❌ Menu system is currently busy. Please try again later.\n\n> ${config.BOT_NAME}`,
+                    contextInfo: contextInfo
                 },
                 { quoted: mek }
             );
