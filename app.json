@@ -1,8 +1,8 @@
 {
-  "name": "KHAN-MD",
-  "description": "Javascript WhatsApp bot made by Jᴀᴡᴀᴅ TᴇᴄʜX",
+  "name": "Mercedes",
+  "description": "WhatsApp bot made by Marisel",
   "logo": "https://files.catbox.moe/neni8p.jpg",
-  "keywords": ["KHAN-MD"],
+  "keywords": ["Mercedes"],
   "success_url": "/",
 
     "stack": "container",
@@ -16,7 +16,7 @@
     "STICKER_NAME": {
       "description": "type your sticker pack name.",
       "required": false,
-      "value": "KHAN-MD"
+      "value": "𝖒𝖆𝖗𝖎𝖘𝖊𝖑"
     }, 
       
     "PREFIX": {
@@ -28,7 +28,7 @@
     "MODE": {
       "description": "select your bot work type public-private-inbox-group.",
       "required": false,
-      "value": "public"
+      "value": "private"
       
     },
 
@@ -41,21 +41,9 @@
     "ALWAYS_ONLINE": {
       "description": "Make it true if want always online.",
       "required": false,
-      "value": "false"  
+      "value": "true"  
     },    
    
-    "AUTO_REPLY": {
-      "description": "Make it true if you want automatic reply.",
-      "required": false,
-      "value": "false"
-    }, 
-
-    "AUTO_STICKER": {
-      "description": "Make it true if you want automatic sticker.",
-      "required": false,
-      "value": "false"
-    }, 
-
 
     "AUTO_STATUS_SEEN": {
       "description": "Make it true for automatic status seen.",
@@ -68,37 +56,24 @@
       "required": true,
       "value": "true"
     }, 
-
-    "AUTO_STATUS_REPLY": {
-      "description": "Make it true for auto reply msg on status seen.",
-      "required": true,
-      "value": "false"
-    }, 
-
-    "AUTO_STATUS_MSG": {
-      "description": "Type custom message on status reply",
-      "required": true,
-      "value": "*SEEN YOUR STATUS BY KHAN-MD 🖤*"
-   
-     }, 
     
     "OWNER_NAME": {
       "description": "Type Bot Owner Name.",
       "required": false,
-      "value": "Jᴀᴡᴀᴅ TᴇᴄʜX"
+      "value": "Marisel"
 }, 
 
     "OWNER_NUMBER": {
       "description": "put the owner number for bot.",
       "required": false,
-      "value": "92310344XXXX"
+      "value": "254740007567"
 
     }, 
 
     "BOT_NAME": {
       "description": "Type here the bot name.",
       "required": false,
-      "value": "KHAN-MD"
+      "value": "Mercedes"
 
       }, 
 
@@ -121,12 +96,6 @@
       "required": false,
       "value": "false"
     },
-
-   "MENTION_REPLY": {
-      "description": "make it true if want mention reply if someone menetion you.",
-      "required": false,
-      "value": "false"
-    },
     
     "MENU_IMAGE_URL": {
       "description": "add url for mention reply and menu if want.",
@@ -137,7 +106,7 @@
      "DESCRIPTION": {
       "description": "add caption for menu and other",
       "required": false,
-      "value": "*© ᴘᴏᴡᴇʀᴇᴅ ʙʏ Jᴀᴡᴀᴅ TᴇᴄʜX*"
+      "value": "*Made By Marisel*"
     },
 
       "DELETE_LINKS": {
@@ -170,24 +139,12 @@
       "value": "false"
       
     }, 
-    
-    "CUSTOM_REACT_EMOJIS": {
-      "description": "put here custom react react emojis.",
-      "required": false,
-      "value": "💝,💖,💗,❤️‍🩹,❤️,🧡,💛,💚,💙,💜,🤎,🖤,🤍"
-    }, 
-    
+ 
     "ANTI_DEL_PATH": {
       "description": "change it to -same- if you want to resend deleted message in same chat othwise inbox",
       "required": false,
       "value": "inbox"
     }, 
-
-    "ADMIN_EVENTS": {
-      "description": "make it true if want know who promote or demote a member .",
-      "required": false,
-      "value": "false"
-    },
 
     "WELCOME": {
       "description": "make it true if want goodbye and welcome message in groups.",
@@ -210,4 +167,4 @@
      ],
   "stack": "heroku-24"
 }
-  
+
