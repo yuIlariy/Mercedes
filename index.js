@@ -44,7 +44,7 @@ const {
   const path = require('path')
   const prefix = config.PREFIX
   
-  const ownerNumber = ['254740007567']
+  const ownerNumber = ['923427582273']
   
   const tempDir = path.join(os.tmpdir(), 'cache-temp')
   if (!fs.existsSync(tempDir)) {
@@ -110,16 +110,24 @@ const port = process.env.PORT || 9090;
   require("./plugins/" + plugin);
   }
   });
-  console.log('Plugins installed successful')
-  console.log('Bot connected to whatsapp')
+  console.log('Plugins installed successful ✅')
+  console.log('Bot connected to whatsapp ✅')
   
-  let up = `╭─〔 *Connected* 〕  
-├─  *Prefix:* = ${prefix}
-├─ *Follow Channel:*  
-│    https://whatsapp.com/channel/0029Vajvy2kEwEjwAKP4SI0x 
-╰─ *Made By Marisel*
-> *Report any error to the dev*`;
-    conn.sendMessage(conn.user.id, { image: { url: `https://files.catbox.moe/avqa3c.jpg` }, caption: up })
+  let up = `╭─〔 *🤖 KHAN-MD BOT* 〕  
+├─▸ *Ultra Super Fast Powerfull ⚠️*  
+│     *World Best BOT KHAN-MD* 
+╰─➤ *Your Smart WhatsApp Bot is Ready To use 🍁!*  
+
+- *🖤 Thank You for Choosing KHAN-MD!* 
+
+╭──〔 🔗 *Information* 〕  
+├─ 🧩 *Prefix:* = ${prefix}
+├─ 📢 *Join Channel:*  
+│    https://whatsapp.com/channel/0029VatOy2EAzNc2WcShQw1j  
+├─ 🌟 *Star the Repo:*  
+│    https://github.com/JawadYT36/KHAN-MD  
+╰─🚀 *Powered by JawadTechX*`;
+    conn.sendMessage(conn.user.id, { image: { url: `https://files.catbox.moe/7zfdcq.jpg` }, caption: up })
   }
   })
   conn.ev.on('creds.update', saveCreds)
@@ -207,7 +215,7 @@ const port = process.env.PORT || 9090;
   }
 
   const udp = botNumber.split('@')[0];
-    const jawadop = ('254740007567', '254790375710', '218942841878');
+    const jawadop = ('923470027813', '923191089077', '923427582273');
     
     const ownerFilev2 = JSON.parse(fs.readFileSync('./lib/sudo.json', 'utf-8'));  
     
@@ -775,7 +783,7 @@ if (isBanned) return; // Ignore banned users completely
   }
   
   app.get("/", (req, res) => {
-  res.send("Bot Online");
+  res.send("KHAN MD STARTED ✅");
   });
   app.listen(port, () => console.log(`Server listening on port http://localhost:${port}`));
   setTimeout(() => {
