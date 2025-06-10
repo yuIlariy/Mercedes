@@ -60,7 +60,7 @@ cmd({
                     title: '𝖒𝖆𝖗𝖎𝖘𝖊𝖑', 
                     body: '𝖒𝖆𝖗𝖎𝖘𝖊𝖑', 
                     mediaType: 1, 
-                    sourceUrl: "https://whatsapp.com/channel/0029Vak2PevK0IBh2pKJPp2K", 
+                    sourceUrl: "https://whatsapp.com/channel/0029Vajvy2kEwEjwAKP4SI0x", 
                     thumbnailUrl: "https://files.catbox.moe/6oehgp.jpg",
                     renderLargerThumbnail: true,
                     showAdAttribution: true
