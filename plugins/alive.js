@@ -18,12 +18,11 @@ async (conn, mek, m, { from, sender, pushname, reply }) => {
 *〈 ${config.BOT_NAME} Alive Info 〉*   
 *╰┈───────────────•*
 *╭┈───────────────•*
-*│  ◦* *Status : Active & Online *
+*│  ◦* *Status : Running Smoothly*
 *│  ◦* *Owner : ${config.OWNER_NAME}*
 *│  ◦* *Version : 4.0.0*
 *│  ◦* *Prefix : [${config.PREFIX}]*
 *│  ◦* *Mode : [${config.MODE}]*
-*│  ◦* *RAM : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${(os.totalmem() / 1024 / 1024).toFixed(2)}MB*
 *│  ◦* *Host : ${os.hostname()}*
 *│  ◦* *Uptime : ${runtime(process.uptime())}*
 *╰┈───────────────•*
