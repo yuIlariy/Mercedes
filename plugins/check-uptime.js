@@ -17,7 +17,7 @@ async (conn, mek, m, { from, pushname, reply, sender }) => {
 
         // Stylish uptime message with cage format
         const uptimeMessage = `*╭┈───────────────•*
-*〈 Uptime Status for *${pushname}* 〉*   
+*〈 Uptime Status for Mercedes 〉*   
 *╰┈───────────────•*
 *╭┈───────────────•*
 *│  ◦* Runtime : ${uptime}
