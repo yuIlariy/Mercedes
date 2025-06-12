@@ -52,13 +52,13 @@ cmd({
 *╰┈───────────────•*\n`
 
             cmds.forEach(c => {
-                menuText += `*┋*  *Command:* .${c.pattern}\n`
+                menuText += `*┋* 📄 *Command:* .${c.pattern}\n`
                 menuText += `*┋* ❕ ${c.desc || 'No description'}\n`
                 if (c.alias?.length) {
                     menuText += `*┋* 🔹 *Aliases:* ${c.alias.map(a => `.${a}`).join(', ')}\n`
                 }
                 if (c.use) {
-                    menuText += `*┋*  *Usage:* ${c.use}\n`
+                    menuText += `*┋* 💡 *Usage:* ${c.use}\n`
                 }
                 menuText += `*╰┈───────────────•*\n`
             })
@@ -67,11 +67,11 @@ cmd({
         menuText += `*◆─〈 ✦${config.BOT_NAME}✦ 〉─◆*
 *╭┈───────────────•*
 *│* 📝 *Note:* Use ${config.PREFIX}help <command> for details
-*│* *Made By Marisel*
+*│* ${config.DESCRIPTION}
 *╰┈───────────────•*`
 
         await conn.sendMessage(from, { 
-            video: { url: 'https://files.catbox.moe/gazr1n.mp4' },
+            video: { url: 'https://files.catbox.moe/6zh63g.mp4' },
             caption: menuText,
             gifPlayback: true,
             contextInfo: {
@@ -87,8 +87,8 @@ cmd({
                     title: `${config.BOT_NAME} Commands`,
                     body: `${totalCommands} Commands | ${categories.length} Categories`,
                     mediaType: 2,
-                    thumbnailUrl: 'https://files.catbox.moe/x0izlm.jpg',
-                    sourceUrl: 'https://whatsapp.com/channel/0029Vajvy2kEwEjwAKP4SI0x',
+                    thumbnailUrl: config.MENU_IMAGE_URL || 'https://files.catbox.moe/tpzqtm.jpg',
+                    sourceUrl: config.SUPPORT_LINK,
                     renderLargerThumbnail: true
                 }
             }
