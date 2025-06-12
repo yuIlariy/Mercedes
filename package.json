@@ -2,9 +2,9 @@
   "name": "Mercedes",
   "version": "4.5.0",
   "description": "A joke",
-  "main": "index.js",
+  "main": "marisel.js",
   "scripts": {
-    "start": "pm2 start index.js --deep-monitoring --attach --name Mercedes",
+    "start": "pm2 start marisel.js --deep-monitoring --attach --name Mercedes",
     "stop": "pm2 stop Mercedes",
     "restart": "pm2 restart Mercedes"
   },
