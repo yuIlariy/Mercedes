@@ -9,7 +9,7 @@ cmd({
     category: "menu",
     react: "📜",
     filename: __filename
-}, async (conn, mek, m, { from, reply }) => {
+}, async (conn, mek, m, { from, sender, pushname, reply }) => {
     try {
         // Count total commands and aliases
         const totalCommands = Object.keys(commands).length
@@ -19,24 +19,24 @@ cmd({
         })
 
         // Get unique categories count
-        const categories = [...new Set(Object.values(commands).map(c => c.category))]
+        const categories = [...new Set(Object.values(commands).map(c => c.category)]
 
-        let menuText = `╭───『 *${config.BOT_NAME} COMMAND LIST* 』───⳹
-│
-│ *🛠️ BOT INFORMATION*
-│ • 🤖 Bot Name: ${config.BOT_NAME}
-│ • 👑 Owner: ${config.OWNER_NAME}
-│ • ⚙️ Prefix: [${config.PREFIX}]
-│ • 🌐 Platform: Heroku
-│ • 📦 Version: 4.0.0
-│ • 🕒 Runtime: ${runtime(process.uptime())}
-│
-│ *📊 COMMAND STATS*
-│ • 📜 Total Commands: ${totalCommands}
-│ • 🔄 Total Aliases: ${aliasCount}
-│ • 🗂️ Categories: ${categories.length}
-│
-╰────────────────⳹\n`
+        let menuText = `*╭┈───────────────•*
+*〈 ${config.BOT_NAME} Command List 〉*   
+*╰┈───────────────•*
+*╭┈───────────────•*
+*│  ◦* 🤖 *Bot Name:* ${config.BOT_NAME}
+*│  ◦* 👑 *Owner:* ${config.OWNER_NAME}
+*│  ◦* ⚙️ *Prefix:* [${config.PREFIX}]
+*│  ◦* 🌐 *Platform:* Heroku
+*│  ◦* 📦 *Version:* 4.0.0
+*│  ◦* 🕒 *Runtime:* ${runtime(process.uptime())}
+*╰┈───────────────•*
+*╭┈───────────────•*
+*│  ◦* 📜 *Total Commands:* ${totalCommands}
+*│  ◦* 🔄 *Total Aliases:* ${aliasCount}
+*│  ◦* 🗂️ *Categories:* ${categories.length}
+*╰┈───────────────•*\n`
 
         // Organize commands by category
         const categorized = {}
@@ -46,46 +46,63 @@ cmd({
 
         // Generate menu for each category
         for (const [category, cmds] of Object.entries(categorized)) {
-            menuText += `╭───『 *${category.toUpperCase()}* 』───⳹
-│ • 📂 Commands: ${cmds.length}
-│ • 🔄 Aliases: ${cmds.reduce((a, c) => a + (c.alias ? c.alias.length : 0), 0)}
-│
-`
+            menuText += `*╭┈── ${category.toUpperCase()} ──•*
+*│  ◦* 📂 *Commands:* ${cmds.length}
+*│  ◦* 🔄 *Aliases:* ${cmds.reduce((a, c) => a + (c.alias ? c.alias.length : 0), 0)}
+*╰┈───────────────•*\n`
 
             cmds.forEach(c => {
-                menuText += `┃▸📄 COMMAND: .${c.pattern}\n`
-                menuText += `┃▸❕ ${c.desc || 'No description available'}\n`
-                if (c.alias && c.alias.length > 0) {
-                    menuText += `┃▸🔹 Aliases: ${c.alias.map(a => `.${a}`).join(', ')}\n`
+                menuText += `*┋*  *Command:* .${c.pattern}\n`
+                menuText += `*┋* ❕ ${c.desc || 'No description'}\n`
+                if (c.alias?.length) {
+                    menuText += `*┋* 🔹 *Aliases:* ${c.alias.map(a => `.${a}`).join(', ')}\n`
                 }
                 if (c.use) {
-                    menuText += `┃▸💡 Usage: ${c.use}\n`
+                    menuText += `*┋*  *Usage:* ${c.use}\n`
                 }
-                menuText += `│\n`
+                menuText += `*╰┈───────────────•*\n`
             })
-            
-            menuText += `╰────────────────⳹\n`
         }
 
-        menuText += `\n📝 *Note*: Use ${config.PREFIX}help <command> for detailed help\n`
-        menuText += `> ${config.DESCRIPTION}`
+        menuText += `*◆─〈 ✦${config.BOT_NAME}✦ 〉─◆*
+*╭┈───────────────•*
+*│* 📝 *Note:* Use ${config.PREFIX}help <command> for details
+*│* *Made By Marisel*
+*╰┈───────────────•*`
 
-        await conn.sendMessage(
-            from,
-            {
-                image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/7zfdcq.jpg' },
-                caption: menuText,
-                contextInfo: {
-                    mentionedJid: [m.sender],
-                    forwardingScore: 999,
-                    isForwarded: true
+        await conn.sendMessage(from, { 
+            video: { url: 'https://files.catbox.moe/gazr1n.mp4' },
+            caption: menuText,
+            gifPlayback: true,
+            contextInfo: {
+                mentionedJid: [sender],
+                forwardingScore: 999,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                    newsletterJid: '120363299029326322@newsletter',
+                    newsletterName: config.OWNER_NAME || config.BOT_NAME,
+                    serverMessageId: 143
+                },
+                externalAdReply: {
+                    title: `${config.BOT_NAME} Commands`,
+                    body: `${totalCommands} Commands | ${categories.length} Categories`,
+                    mediaType: 2,
+                    thumbnailUrl: 'https://files.catbox.moe/x0izlm.jpg',
+                    sourceUrl: 'https://whatsapp.com/channel/0029Vajvy2kEwEjwAKP4SI0x',
+                    renderLargerThumbnail: true
                 }
-            },
-            { quoted: mek }
-        )
+            }
+        }, { quoted: mek })
 
     } catch (e) {
         console.error('Command List Error:', e)
-        reply(`❌ Error generating command list: ${e.message}`)
+        await conn.sendMessage(from, { 
+            text: `*╭┈───────────────•*\n*┋* Command List Error!\n*┋* ${e.message}\n*╰┈───────────────•*`,
+            contextInfo: {
+                mentionedJid: [sender],
+                forwardingScore: 999,
+                isForwarded: true
+            }
+        }, { quoted: mek })
     }
 })
