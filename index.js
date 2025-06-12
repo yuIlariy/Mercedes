@@ -113,11 +113,13 @@ const port = process.env.PORT || 9090;
   console.log('Plugins installed successful')
   console.log('Bot connected to whatsapp')
   
-  let up = `╭─〔 *Connected* 〕  
-├─  *Prefix:* = ${prefix}
-├─ *Follow Channel:*  
-│    https://whatsapp.com/channel/0029Vajvy2kEwEjwAKP4SI0x 
-╰─ *Made By Marisel*
+  let up = `*╭┈───────────────•*  
+*〈 Prefix:* = ${prefix}*
+*〈 Follow Channel:*  
+*〈 https://shorturl.at/AJYbn*
+*〈 Made By Marisel*
+*╰┈───────────────•*
+*Made By Marisel*
 > *Report any error to the dev*`;
       conn.sendMessage(conn.user.id, { 
         image: { url: `https://files.catbox.moe/avqa3c.jpg` }, 
