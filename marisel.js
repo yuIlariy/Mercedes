@@ -123,7 +123,7 @@ const port = process.env.PORT || 9090;
 *Made By Marisel*
 > *Report any error to the dev*`;
       conn.sendMessage(conn.user.id, { 
-        image: { url: `https://files.catbox.moe/avqa3c.jpg` }, 
+        image: { url: `https://files.catbox.moe/x0izlm.jpg` }, 
         caption: up,
         contextInfo: {
           forwardingScore: 999,
