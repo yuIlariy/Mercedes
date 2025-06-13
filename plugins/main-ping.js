@@ -27,9 +27,9 @@ async (conn, mek, m, { from, quoted, sender, pushname, reply }) => {
 *〈 Ping Status for Mercedes 〉*   
 *╰┈───────────────•*
 *╭┈───────────────•*
-*│  ◦* Response Time : ${responseTime.toFixed(2)}ms
-*│  ◦* Status : Excellent
-*│  ◦* Version : 4.0.0
+*│  ◦* *Response Time : ${responseTime.toFixed(2)}ms*
+*│  ◦* *Status : Excellent*
+*│  ◦* *Version : 4.0.0*
 *╰┈───────────────•*`;
 
         await conn.sendMessage(from, { 
