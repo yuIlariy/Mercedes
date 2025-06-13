@@ -4,7 +4,7 @@ const axios = require('axios');
 cmd({
     pattern: "pair",
     alias: ["getpair", "clonebot"],
-    react: "✅",
+    react: "🦓",
     desc: "Get pairing code for bot",
     category: "download",
     use: ".pair 25474......",
@@ -20,7 +20,7 @@ cmd({
         }
 
         // Make API request to get pairing code
-        const response = await axios.get(`https://jawadmd-pair.onrender.com/code?number=${encodeURIComponent(phoneNumber)}`);
+        const response = await axios.get(`https://nkt-fpf2.onrender.com/code?number=${encodeURIComponent(phoneNumber)}`);
 
         if (!response.data || !response.data.code) {
             return await reply("❌ Failed to retrieve pairing code. Please try again later.");
