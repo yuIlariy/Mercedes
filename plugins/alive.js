@@ -23,7 +23,7 @@ async (conn, mek, m, { from, sender, pushname, reply }) => {
 *│  ◦* *Version : 4.0.0*
 *│  ◦* *Prefix : [${config.PREFIX}]*
 *│  ◦* *Mode : [${config.MODE}]*
-*│  ◦* *Host : ${os.hostname()}*
+*│  ◦* *Host : Heroku*
 *│  ◦* *Uptime : ${runtime(process.uptime())}*
 *╰┈───────────────•*
 > *Made By Marisel*`;
