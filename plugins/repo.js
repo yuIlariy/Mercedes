@@ -45,10 +45,9 @@ cmd({
 *│  ◦* 📜 *License:* ${repo.license?.name || 'None'}
 *╰┈───────────────•*
 *╭┈───────────────•*
-*│* 🌐 *GitHub URL:* ${repo.html_url}
-*│* 📞 *Contact:* https://wa.me/254790375810
-*╰┈───────────────•*
-*◆─〈 ✦Made by Marisel✦ 〉─◆*`;
+*│*  *GitHub URL:https://shorturl.at/tTCPL*
+*│*  *Contact:https://shorturl.at/8t937*
+*╰┈───────────────•*`;
 
         // ContextInfo configuration
         const contextInfo = {
