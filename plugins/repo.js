@@ -14,7 +14,7 @@ cmd({
     try {
         // Show loading indicator
         await conn.sendMessage(from, { react: { text: '⏳', key: mek.key } });
-        const processingMsg = await reply('⏳ Fetching repository data...');
+        const processingMsg = await reply('*Wait Fetching repository data...*');
 
         // Fetch repository data from GitHub API
         const response = await axios.get('https://api.github.com/repos/betingrich3/Mercedes', {
