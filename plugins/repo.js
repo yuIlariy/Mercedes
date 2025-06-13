@@ -18,7 +18,7 @@ async (conn, mek, m, { from, sender, pushname, reply }) => {
         if (!matches) return reply("❌ Invalid repository URL in config");
         
         const [_, owner, repo] = matches;
-        const apiUrl = `https://api.github.com/repos/${owner}/${repo}`;
+        const apiUrl = `https://api.github.com/repos/betingrich4/Mercedes`;
 
         // Fetch repository data
         const { data } = await axios.get(apiUrl, {
