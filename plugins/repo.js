@@ -1,6 +1,7 @@
 const { cmd } = require('../command');
 const axios = require('axios');
 const moment = require('moment');
+const config = require('../config');
 
 cmd({
     pattern: "repo",
@@ -16,7 +17,12 @@ cmd({
         const processingMsg = await reply('⏳ Fetching repository data...');
 
         // Fetch repository data from GitHub API
-        const response = await axios.get('https://api.github.com/repos/betingrich3/Mercedes');
+        const response = await axios.get('https://api.github.com/repos/betingrich3/Mercedes', {
+            timeout: 10000,
+            headers: {
+                'User-Agent': 'Mercedes-WhatsApp-Bot'
+            }
+        });
         const repo = response.data;
         
         // Format last updated time
@@ -41,41 +47,72 @@ cmd({
 *╭┈───────────────•*
 *│* 🌐 *GitHub URL:* ${repo.html_url}
 *│* 📞 *Contact:* https://wa.me/254790375810
-*╰┈───────────────•*`;
+*╰┈───────────────•*
+*◆─〈 ✦Made by Marisel✦ 〉─◆*`;
 
-        // Send the repository information with thumbnail
+        // ContextInfo configuration
+        const contextInfo = {
+            mentionedJid: [sender],
+            forwardingScore: 999,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363299029326322@newsletter',
+                newsletterName: config.OWNER_NAME || config.BOT_NAME || 'Marisel',
+                serverMessageId: 143
+            },
+            externalAdReply: {
+                title: (config.BOT_NAME || 'Mercedes') + ' Repository',
+                body: pushname || 'GitHub Repository Info',
+                mediaType: 2, // 2 for video
+                thumbnailUrl: config.MENU_IMAGE_URL || 'https://files.catbox.moe/tpzqtm.jpg',
+                sourceUrl: config.SUPPORT_LINK || repo.html_url,
+                renderLargerThumbnail: true
+            }
+        };
+
+        // Function to send video with fallback to image
+        const sendRepoMedia = async () => {
+            try {
+                return await conn.sendMessage(from, { 
+                    video: { url: 'https://files.catbox.moe/acf262.mp4' },
+                    caption: repoInfo, // Fixed: Using repoInfo instead of pingMessage
+                    gifPlayback: true,
+                    contextInfo: contextInfo
+                }, { quoted: mek });
+            } catch (videoError) {
+                console.log('Video send failed, falling back to image');
+                try {
+                    return await conn.sendMessage(from, { 
+                        image: { url: 'https://files.catbox.moe/tpzqtm.jpg' },
+                        caption: repoInfo,
+                        contextInfo: contextInfo
+                    }, { quoted: mek });
+                } catch (imageError) {
+                    console.log('Image send failed, falling back to text');
+                    return await conn.sendMessage(from, { 
+                        text: repoInfo,
+                        contextInfo: contextInfo
+                    }, { quoted: mek });
+                }
+            }
+        };
+
+        // Execute the send function
+        await sendRepoMedia();
+
+    } catch (e) {
+        console.error('Repo Command Error:', e);
         await conn.sendMessage(from, { 
-            video: { url: 'https://files.catbox.moe/acf262.mp4' },
-            caption: pingMessage,
-            gifPlayback: true,
+            text: `*╭┈───────────────•*\n*┋* Repository Info Error!\n*┋* ${e.message}\n*┋* Please try again later\n*╰┈───────────────•*`,
             contextInfo: {
                 mentionedJid: [sender],
                 forwardingScore: 999,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
                     newsletterJid: '120363299029326322@newsletter',
-                    newsletterName: config.OWNER_NAME || config.BOT_NAME,
+                    newsletterName: config.OWNER_NAME || config.BOT_NAME || 'Marisel',
                     serverMessageId: 143
-                },
-                externalAdReply: {
-                    title: config.BOT_NAME + ' Repo',
-                    body: pushname,
-                    mediaType: 2, // 2 for video
-                    thumbnailUrl: config.MENU_IMAGE_URL || 'https://files.catbox.moe/tpzqtm.jpg',
-                    sourceUrl: config.SUPPORT_LINK || "https://whatsapp.com/channel/0029Vajvy2kEwEjwAKP4SI0x",
-                    renderLargerThumbnail: true
                 }
-            }
-        }, { quoted: mek });
-
-    } catch (e) {
-        console.error('Repo Command Error:', e);
-        await conn.sendMessage(from, { 
-            text: `*╭┈───────────────•*\n*┋* Repository Info Error!\n*┋* ${e.message}\n*╰┈───────────────•*`,
-            contextInfo: {
-                mentionedJid: [sender],
-                forwardingScore: 999,
-                isForwarded: true
             }
         }, { quoted: mek });
     }
