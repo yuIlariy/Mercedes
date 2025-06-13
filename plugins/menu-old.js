@@ -14,33 +14,32 @@ cmd({
 },
 async (conn, mek, m, { from, sender, pushname, reply }) => {
     try {
-        const dec = `╭━━━〔 *${config.BOT_NAME} Main Menu* 〕━━━╮
-┃ ✨ *Owner:* ${config.OWNER_NAME}
-┃ ⚙️ *Mode:* ${config.MODE}
-┃ 📡 *Platform:* Heroku
-┃ 🧠 *Type:* NodeJs (Multi Device)
-┃ ⌨️ *Prefix:* ${config.PREFIX}
-┃ 🧾 *Version:* 3.0.0 Beta
+        const dec = `╭━━━〔 *${config.BOT_NAME}* 〕━━━╮
+┃  *Owner:* ${config.OWNER_NAME}
+┃  *Mode:* ${config.MODE}
+┃  *Platform:* Heroku
+┃  *Type:* NodeJs (Multi Device)
+┃  *Prefix:* ${config.PREFIX}
+┃  *Version:* 3.0.0 Beta
 ╰━━━━━━━━━━━━━━━━━━━━━━━━╯
 
-╭━━〔 🧩 *Command Categories* 〕━━╮
-┃ 📖 Quranmenu
-┃ 🕋 Prayertime
-┃ 🤖 Aimenu
-┃ 🎭 Anmiemenu
-┃ 😹 Reactions
-┃ 🔁 Convertmenu
-┃ 🎉 Funmenu
-┃ ⬇️ Dlmenu
-┃ ⚒️ Listcmd
-┃ 🏠 Mainmenu
-┃ 👥 Groupmenu
-┃ 📜 Allmenu
-┃ 👑 Ownermenu
-┃ 🧩 Othermenu
-┃ 🖌️ Logo
-┃ 📦 Repo
-╰━━━━━━━━━━━━━━━━━━━━━━━━━━━╯
+╭━━〔 *Command Center* 〕━━╮
+*┃  Quranmenu*
+*┃  Aimenu*
+*┃  Anmiemenu*
+*┃  Reactions*
+*┃  Convertmenu*
+*┃  Funmenu*
+*┃  Dlmenu*
+*┃  Listcmd*
+*┃  Mainmenu*
+*┃  Groupmenu*
+*┃  Allmenu*
+*┃  Ownermenu*
+*┃  Othermenu*
+*┃  Logo*
+*┃  Repo*
+*╰━━━━━━━━━━━━━━━━╯*
 > ${config.DESCRIPTION}
 `;
 
