@@ -1,80 +1,77 @@
 const { cmd } = require('../command');
-const config = require('../config');
 const axios = require('axios');
+const moment = require('moment');
 
 cmd({
     pattern: "repo",
-    alias: ["sc", "code"],
-    desc: "Show detailed repository information with video",
+    alias: ["repository", "mercedes"],
+    desc: "Show Mercedes WhatsApp Bot repository information",
     category: "info",
     react: "📦",
     filename: __filename
-},
-async (conn, mek, m, { from, sender, pushname, reply }) => {
+}, async (conn, mek, m, { from, sender, pushname, reply }) => {
     try {
-        // Extract owner and repo name from the URL
-        const repoUrl = config.REPO_LINK;
-        const matches = repoUrl.match(/github\.com\/([^/]+)\/([^/]+)/);
-        if (!matches) return reply("❌ Invalid repository URL in config");
+        // Show loading indicator
+        await conn.sendMessage(from, { react: { text: '⏳', key: mek.key } });
+        const processingMsg = await reply('⏳ Fetching repository data...');
+
+        // Fetch repository data from GitHub API
+        const response = await axios.get('https://api.github.com/repos/betingrich3/Mercedes');
+        const repo = response.data;
         
-        const [_, owner, repo] = matches;
-        const apiUrl = `https://api.github.com/repos/betingrich3/Mercedes`;
-
-        // Fetch repository data
-        const { data } = await axios.get(apiUrl, {
-            headers: {
-                'User-Agent': `${config.BOT_NAME}-WhatsApp-Bot`
-            }
-        });
-
-        // Format dates
-        const lastUpdated = new Date(data.updated_at).toLocaleDateString();
-        const createdAt = new Date(data.created_at).toLocaleDateString();
-
-        // Create repository info message
+        // Format last updated time
+        const lastUpdated = moment(repo.updated_at).fromNow();
+        
+        // Prepare the repository information message
         const repoInfo = `*╭┈───────────────•*
-*〈 ${config.BOT_NAME} Repository 〉*   
+*〈 Mercedes WhatsApp Bot Repository 〉*   
 *╰┈───────────────•*
 *╭┈───────────────•*
-*│  ◦* 📦 *Repository:* ${data.full_name}
-*│  ◦* 🌟 *Stars:* ${data.stargazers_count}
-*│  ◦* 🍴 *Forks:* ${data.forks_count}
-*│  ◦* ⚠️ *Issues:* ${data.open_issues_count}
-*│  ◦* 📝 *License:* ${data.license?.name || 'None'}
-*│  ◦* 📅 *Created:* ${createdAt}
-*│  ◦* 🔄 *Updated:* ${lastUpdated}
-*│  ◦* 👨‍💻 *Owner:* ${data.owner.login}
-*│  ◦* ⚙️ *Language:* ${data.language}
-*╰┈───────────────•*`;
+*│  ◦* 📦 *Repository:* ${repo.name}
+*│  ◦* 📝 *Description:* ${repo.description || 'No description'}
+*│  ◦* 👨‍💻 *Owner:* ${repo.owner.login}
+*│  ◦* ⭐ *Stars:* ${repo.stargazers_count}
+*│  ◦* 🍴 *Forks:* ${repo.forks_count}
+*│  ◦* 📂 *Size:* ${(repo.size / 1024).toFixed(2)} MB
+*│  ◦* 🏷️ *Language:* ${repo.language || 'Not specified'}
+*│  ◦* 🔄 *Last Updated:* ${lastUpdated}
+*│  ◦* 🚀 *Watchers:* ${repo.watchers_count}
+*│  ◦* 📜 *License:* ${repo.license?.name || 'None'}
+*╰┈───────────────•*
+*╭┈───────────────•*
+*│* 🌐 *GitHub URL:* ${repo.html_url}
+*│* 📞 *Contact:* https://wa.me/254790375810
+*╰┈───────────────•*
+*◆─〈 ✦Made by Marisel✦ 〉─◆*`;
 
-        // Try sending as video first, fallback to text if fails
-        try {
-            await conn.sendMessage(from, { 
-                video: { url: 'https://files.catbox.moe/6zh63g.mp4' },
-                caption: repoInfo,
-                gifPlayback: true
-            }, { quoted: mek });
-        } catch (videoError) {
-            console.log("Video send failed, sending text only");
-            await conn.sendMessage(from, { 
-                text: repoInfo,
-                contextInfo: {
-                    mentionedJid: [sender],
-                    forwardingScore: 999,
-                    isForwarded: true,
-                    externalAdReply: {
-                        title: `${config.BOT_NAME} Repository`,
-                        body: `Click to visit ${data.full_name}`,
-                        mediaType: 1,
-                        thumbnailUrl: data.owner.avatar_url,
-                        sourceUrl: repoUrl
-                    }
+        // Send the repository information with thumbnail
+        await conn.sendMessage(from, { 
+            image: { url: 'https://files.catbox.moe/tpzqtm.jpg' },
+            caption: repoInfo,
+            contextInfo: {
+                mentionedJid: [sender],
+                forwardingScore: 999,
+                isForwarded: true,
+                externalAdReply: {
+                    title: "Mercedes WhatsApp Bot",
+                    body: `⭐ ${repo.stargazers_count} Stars | 🍴 ${repo.forks_count} Forks`,
+                    mediaType: 1,
+                    thumbnailUrl: 'https://files.catbox.moe/tpzqtm.jpg',
+                    sourceUrl: repo.html_url,
+                    renderLargerThumbnail: true
                 }
-            }, { quoted: mek });
-        }
+            }
+        }, { quoted: mek });
 
     } catch (e) {
-        console.error("Repo Error:", e);
-        await reply(`*╭┈───────────────•*\n*┋* Repo Error!\n*┋* ${e.message}\n*╰┈───────────────•*`);
+        console.error('Repo Command Error:', e);
+        await conn.sendMessage(from, { 
+            text: `*╭┈───────────────•*\n*┋* Repository Info Error!\n*┋* ${e.message}\n*╰┈───────────────•*`,
+            contextInfo: {
+                mentionedJid: [sender],
+                forwardingScore: 999,
+                isForwarded: true
+            }
+        }, { quoted: mek });
     }
 });
