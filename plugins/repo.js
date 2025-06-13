@@ -18,7 +18,7 @@ async (conn, mek, m, { from, sender, pushname, reply }) => {
         if (!matches) return reply("❌ Invalid repository URL in config");
         
         const [_, owner, repo] = matches;
-        const apiUrl = `https://api.github.com/repos/betingrich4/Mercedes`;
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}`;
 
         // Fetch repository data
         const { data } = await axios.get(apiUrl, {
@@ -40,7 +40,6 @@ async (conn, mek, m, { from, sender, pushname, reply }) => {
 *│  ◦* 🌟 *Stars:* ${data.stargazers_count}
 *│  ◦* 🍴 *Forks:* ${data.forks_count}
 *│  ◦* ⚠️ *Issues:* ${data.open_issues_count}
-*│  ◦* 🔀 *PRs:* ${data.open_issues_count}
 *│  ◦* 📝 *License:* ${data.license?.name || 'None'}
 *│  ◦* 📅 *Created:* ${createdAt}
 *│  ◦* 🔄 *Updated:* ${lastUpdated}
@@ -48,39 +47,34 @@ async (conn, mek, m, { from, sender, pushname, reply }) => {
 *│  ◦* ⚙️ *Language:* ${data.language}
 *╰┈───────────────•*`;
 
-        await conn.sendMessage(from, { 
-            video: { url: 'https://files.catbox.moe/6zh63g.mp4' },
-            caption: envMessage,
-            gifPlayback: true,
-            contextInfo: {
-                mentionedJid: [m.sender],
-                forwardingScore: 999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363299029326322@newsletter',
-                    newsletterName: config.OWNER_NAME || config.BOT_NAME,
-                    serverMessageId: 143
-                },
-                externalAdReply: {
-                    title: `${config.BOT_NAME} Configuration`,
-                    body: `Owner: ${config.OWNER_NAME}`,
-                    mediaType: 2,
-                    thumbnailUrl: 'https://files.catbox.moe/tpzqtm.jpg',
-                    sourceUrl: "https://whatsapp.com/channel/0029Vajvy2kEwEjwAKP4SI0x",
-                    renderLargerThumbnail: true
+        // Try sending as video first, fallback to text if fails
+        try {
+            await conn.sendMessage(from, { 
+                video: { url: 'https://files.catbox.moe/6zh63g.mp4' },
+                caption: repoInfo,
+                gifPlayback: true
+            }, { quoted: mek });
+        } catch (videoError) {
+            console.log("Video send failed, sending text only");
+            await conn.sendMessage(from, { 
+                text: repoInfo,
+                contextInfo: {
+                    mentionedJid: [sender],
+                    forwardingScore: 999,
+                    isForwarded: true,
+                    externalAdReply: {
+                        title: `${config.BOT_NAME} Repository`,
+                        body: `Click to visit ${data.full_name}`,
+                        mediaType: 1,
+                        thumbnailUrl: data.owner.avatar_url,
+                        sourceUrl: repoUrl
+                    }
                 }
-            }
-        }, { quoted: mek });
+            }, { quoted: mek });
+        }
 
     } catch (e) {
         console.error("Repo Error:", e);
-        await conn.sendMessage(from, { 
-            text: `*╭┈───────────────•*\n*┋* Repo Error!\n*┋* ${e.message}\n*╰┈───────────────•*`,
-            contextInfo: {
-                mentionedJid: [sender],
-                forwardingScore: 999,
-                isForwarded: true
-            }
-        }, { quoted: mek });
+        await reply(`*╭┈───────────────•*\n*┋* Repo Error!\n*┋* ${e.message}\n*╰┈───────────────•*`);
     }
 });
