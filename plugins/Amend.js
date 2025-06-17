@@ -2,7 +2,7 @@ const config = require('../config');
 const { cmd, commands } = require('../command');
 
 cmd({
-    pattern: "ping3",
+    pattern: "ping4",
     alias: ["speed", "pong"],
     use: '.ping',
     desc: "Check bot's response time.",
@@ -40,11 +40,6 @@ async (conn, mek, m, { from, quoted, sender, pushname, reply }) => {
                 mentionedJid: [sender],
                 forwardingScore: 999,
                 isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363299029326322@newsletter',
-                    newsletterName: config.OWNER_NAME || config.BOT_NAME,
-                    serverMessageId: 143
-                },
                 externalAdReply: {
                     title: config.BOT_NAME + ' Ping',
                     body: pushname,
@@ -53,37 +48,19 @@ async (conn, mek, m, { from, quoted, sender, pushname, reply }) => {
                     sourceUrl: config.SUPPORT_LINK || "https://whatsapp.com/channel/0029Vajvy2kEwEjwAKP4SI0x",
                     renderLargerThumbnail: true
                 },
-                // Adding two buttons: Menu and Uptime
+                // Buttons replacing channel JID
                 buttons: [
                     {
-                        buttonId: `id1`,
+                        buttonId: '.menu',
                         buttonText: { displayText: 'Menu 📋' },
-                        type: 1 // Reply button
+                        type: 1
                     },
                     {
-                        buttonId: `id2`,
+                        buttonId: '.uptime',
                         buttonText: { displayText: 'Uptime ⏳' },
-                        type: 1 // Reply button
+                        type: 1
                     }
-                ],
-                nativeFlowMessage: {
-                    buttons: [
-                        {
-                            name: "quick_reply",
-                            buttonParamsJson: JSON.stringify({
-                                display_text: "Menu 📋",
-                                id: ".menu"
-                            })
-                        },
-                        {
-                            name: "quick_reply",
-                            buttonParamsJson: JSON.stringify({
-                                display_text: "Uptime ⏳",
-                                id: ".uptime"
-                            })
-                        }
-                    ]
-                }
+                ]
             }
         }, { quoted: mek });
 
@@ -102,7 +79,7 @@ async (conn, mek, m, { from, quoted, sender, pushname, reply }) => {
 
 // ping2 command with video and cage format
 cmd({
-    pattern: "ping4",
+    pattern: "ping5",
     desc: "Check bot's response time (alternative).",
     category: "main",
     react: "🍂",
@@ -133,11 +110,6 @@ async (conn, mek, m, { from, pushname, sender, reply }) => {
                 mentionedJid: [sender],
                 forwardingScore: 999,
                 isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363299029326322@newsletter',
-                    newsletterName: config.OWNER_NAME || config.BOT_NAME,
-                    serverMessageId: 143
-                },
                 externalAdReply: {
                     title: config.BOT_NAME + ' Speed Test',
                     body: pushname,
@@ -146,37 +118,19 @@ async (conn, mek, m, { from, pushname, sender, reply }) => {
                     sourceUrl: config.SUPPORT_LINK || "https://whatsapp.com/channel/0029Vajvy2kEwEjwAKP4SI0x",
                     renderLargerThumbnail: true
                 },
-                // Adding two buttons: Menu and Uptime
+                // Buttons replacing channel JID
                 buttons: [
                     {
-                        buttonId: `id1`,
+                        buttonId: '.menu',
                         buttonText: { displayText: 'Menu 📋' },
-                        type: 1 // Reply button
+                        type: 1
                     },
                     {
-                        buttonId: `id2`,
+                        buttonId: '.uptime',
                         buttonText: { displayText: 'Uptime ⏳' },
-                        type: 1 // Reply button
+                        type: 1
                     }
-                ],
-                nativeFlowMessage: {
-                    buttons: [
-                        {
-                            name: "quick_reply",
-                            buttonParamsJson: JSON.stringify({
-                                display_text: "Menu 📋",
-                                id: ".menu"
-                            })
-                        },
-                        {
-                            name: "quick_reply",
-                            buttonParamsJson: JSON.stringify({
-                                display_text: "Uptime ⏳",
-                                id: ".uptime"
-                            })
-                        }
-                    ]
-                }
+                ]
             }
         }, { quoted: message });
 
