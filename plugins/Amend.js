@@ -1,112 +1,108 @@
-const config = require('../config');
-const { cmd } = require('../command');
-const { runtime } = require('../lib/functions');
+import config from '../../config.js';
 
-cmd({
-    pattern: "ping3",
-    alias: ["speed","pong"],
-    use: '.ping',
-    desc: "Check bot's response time with interactive buttons",
-    category: "main",
-    react: "⚡",
-    filename: __filename
-},
-async (conn, mek, m, { from, prefix, sender, pushname, reply }) => {
-    try {
-        const start = new Date().getTime();
-        
-        // Send reaction first
-        await conn.sendMessage(from, {  
-            react: { text: '⚡', key: mek.key }  
-        });
+const fancyStyles = [
+  "ᴍᴇʀᴄᴇᴅᴇs sᴘᴇᴇᴅ"
+];
 
-        const end = new Date().getTime();  
-        const responseTime = (end - start) / 1000;  
+const colors = ["🫡", "☣️", "😇", "🥰", "👀", "😎", "😈", "❤️‍🔥", "💪"];
 
-        // Stylish ping message with cage format
-        const pingMessage = `*╭┈───────────────•*
+const ping = async (m, sock) => {
+  const prefix = config.PREFIX;
+  const cmd = m.body.startsWith(prefix) 
+    ? m.body.slice(prefix.length).split(' ')[0].toLowerCase()
+    : '';
 
-〈 Ping Status for ${config.BOT_NAME} 〉
-╰┈───────────────•
-╭┈───────────────•
-│  ◦ Response Time : ${responseTime.toFixed(2)}ms
-│  ◦ Status : Excellent
-│  ◦ Version : ${config.VERSION || '4.0.0'}
-╰┈───────────────•`;
+  if (cmd === "ping4" || cmd === "speed" || cmd === "pong") {
+    const start = new Date().getTime();
+    await m.React('⚡'); // Lightning reaction for speed
+    
+    // Simulate some processing time
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    const end = new Date().getTime();
+    const responseTime = (end - start).toFixed(2);
 
-        // Create buttons for ping response
-        const generatebutton = [{
-            buttonId: `${prefix}uptime`,
-            buttonText: { displayText: '⏱️ UPTIME' },
-            type: 1
-        }, {
-            buttonId: `${prefix}menu`,
-            buttonText: { displayText: '📋 MAIN MENU' },
-            type: 1
-        }];
+    // Select random fancy style and color
+    const fancyText = fancyStyles[Math.floor(Math.random() * fancyStyles.length)];
+    const colorEmoji = colors[Math.floor(Math.random() * colors.length)];
 
-        // Send message with buttons
-        await conn.sendMessage(from, {   
-            video: { url: 'https://files.catbox.moe/acf262.mp4' },  
-            caption: pingMessage,  
-            gifPlayback: true,
-            footer: `Tap buttons below for more options`,
-            buttons: generatebutton,
-            headerType: 4,
-            contextInfo: {  
-                mentionedJid: [sender],  
-                forwardingScore: 999,  
-                isForwarded: true,  
-                forwardedNewsletterMessageInfo: {  
-                    newsletterJid: '120363299029326322@newsletter',  
-                    newsletterName: config.OWNER_NAME || config.BOT_NAME,  
-                    serverMessageId: 143  
-                },  
-                externalAdReply: {  
-                    title: `${config.BOT_NAME} Ping`,  
-                    body: pushname,  
-                    mediaType: 2, // 2 for video  
-                    thumbnailUrl: config.MENU_IMAGE_URL || 'https://files.catbox.moe/tpzqtm.jpg',  
-                    sourceUrl: config.SUPPORT_LINK || "https://whatsapp.com/channel/0029Vajvy2kEwEjwAKP4SI0x",  
-                    renderLargerThumbnail: true  
-                }  
-            }  
-        }, { quoted: mek });  
+    const responseText = `
+${colorEmoji} *${fancyText}* *${responseTime}ms*
 
-    } catch (e) {  
-        console.error("Ping Error:", e);  
-        await conn.sendMessage(from, {   
-            text: `*╭┈───────────────•*\n*┋* Ping Error!\n*┋* ${e.message}\n*╰┈───────────────•*`,  
-            contextInfo: {  
-                mentionedJid: [sender],  
-                forwardingScore: 999,  
-                isForwarded: true  
-            }  
-        }, { quoted: mek });  
-    }
-});
-
-// Uptime command to match the button
-cmd({
-    pattern: "uptime",
-    desc: "Show bot uptime",
-    category: "main",
-    react: "⏱️",
-    filename: __filename
-}, async (conn, mek, m, { from, reply }) => {
-    try {
-        const uptimeMessage = `*╭┈───────────────•*
-*│* ${config.BOT_NAME} Uptime
+*╭┈───────────────•*
+*〈 Ping Status for Mercedes 〉*   
 *╰┈───────────────•*
 *╭┈───────────────•*
-*│  ◦* Uptime: ${runtime(process.uptime())}
-*│  ◦* RAM: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB
-*│  ◦* Node: ${process.version}
-*╰┈───────────────•*`;
+*│  ◦* *Response Time : ${responseTime.toFixed(2)}ms*
+*│  ◦* *Status : Excellent*
+*│  ◦* *Version : 4.0.0*
+*╰┈───────────────•*
+`.trim();
 
-        await reply(uptimeMessage);
-    } catch (e) {
-        console.error("Uptime Error:", e);
-        reply("Error fetching uptime information");
-    }
-});
+    await sock.sendMessage(
+      m.from,
+      {
+        text: responseText,
+        footer: `✨ ${config.BOT_NAME} Performance ✨`,
+        buttons: [
+          {
+            buttonId: `${prefix}ping`,
+            buttonText: { displayText: "🔄 Refresh Ping" },
+            type: 1
+          },
+          {
+            buttonId: `${prefix}uptime`,
+            buttonText: { displayText: "⏱️ Bot Uptime" },
+            type: 1
+          },
+          {
+            buttonId: `${prefix}menu`,
+            buttonText: { displayText: "📋 Main Menu" },
+            type: 1
+          }
+        ],
+        headerType: 1,
+        contextInfo: {
+          isForwarded: true,
+          forwardedNewsletterMessageInfo: {
+            newsletterJid: '120363315182578784@newsletter',
+            newsletterName: config.BOT_NAME,
+            serverMessageId: -1,
+          },
+          forwardingScore: 999,
+          externalAdReply: {
+            title: `⚡ ${config.BOT_NAME} Performance ⚡`,
+            body: "Real-time bot metrics",
+            thumbnailUrl: config.MENU_IMAGE_URL || 'https://raw.githubusercontent.com/Sarkar-Bandaheali/BALOCH-MD_DATABASE/main/Pairing/1733805817658.webp',
+            sourceUrl: config.SUPPORT_LINK || 'https://whatsapp.com/channel/0029Vajvy2kEwEjwAKP4SI0x',
+            mediaType: 1,
+            renderLargerThumbnail: true,
+          },
+        },
+      },
+      { quoted: m }
+    );
+  }
+};
+
+// Helper functions
+function formatUptime(seconds) {
+  const days = Math.floor(seconds / (3600 * 24));
+  const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
+  
+  return `${days}d ${hours}h ${minutes}m ${secs}s`;
+}
+
+function formatMemoryUsage(memoryUsage) {
+  const format = (bytes) => {
+    if (bytes < 1024) return `${bytes} B`;
+    else if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
+    else return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+  };
+  
+  return `RSS: ${format(memoryUsage.rss)} | Heap: ${format(memoryUsage.heapUsed)}`;
+}
+
+export default ping;
