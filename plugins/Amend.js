@@ -3,7 +3,7 @@ const config = require('../config');
 const { runtime } = require('../lib/functions');
 
 cmd({
-    pattern: "menu",
+    pattern: "mend",
     desc: "Show interactive menu system",
     category: "menu",
     react: "🧾",
