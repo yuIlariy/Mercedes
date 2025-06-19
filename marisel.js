@@ -79,7 +79,23 @@ console.log("Session downloaded ✅")
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 9090;
-  
+
+// Auto-bio functionality
+let autoBioInterval = null;
+const updateBio = async (conn) => {
+    try {
+        const now = moment();
+        const time = now.format('HH:mm:ss');
+        const day = now.format('dddd');
+        const date = now.format('D MMMM YYYY');
+        const name = config.OWNER_NAME || 'Marisel';
+        const newBio = `⏰ ${time} | ${day} | 📅 ${date} | Marisel`;
+        await conn.updateProfileStatus(newBio);
+    } catch (e) {
+        console.error('AutoBio Update Error:', e);
+    }
+};
+
   //=============================================
   
   async function connectToWA() {
