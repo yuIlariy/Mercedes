@@ -2,8 +2,9 @@ const { cmd } = require('../command');
 const axios = require('axios');
 const config = require('../config');
 
-let chatbotEnabled = false;
-let currentAI = 'gpt3'; // Default AI
+let chatbotEnabled = true; // Enabled by default
+let currentAI = 'gpt3';
+
 const aiEndpoints = {
     gpt3: 'https://apis.davidcyriltech.my.id/ai/gpt3',
     metaai: 'https://apis.davidcyriltech.my.id/ai/metaai',
@@ -29,7 +30,7 @@ cmd({
         if (action === 'on') {
             if (chatbotEnabled) return reply('❌ Chatbot is already enabled');
             chatbotEnabled = true;
-            return reply(`✅ Chatbot enabled\nCurrent AI: ${currentAI}\nBot will now auto-reply to all messages`);
+            return reply(`✅ Chatbot enabled\nCurrent AI: ${currentAI}`);
         } 
         else if (action === 'off') {
             if (!chatbotEnabled) return reply('❌ Chatbot is already disabled');
@@ -39,18 +40,15 @@ cmd({
         else {
             return reply(`⚙️ Chatbot Status: ${chatbotEnabled ? 'ON' : 'OFF'}\n` +
                         `🤖 Current AI: ${currentAI}\n` +
-                        `🔧 Available AIs: ${Object.keys(aiEndpoints).join(', ')}\n\n` +
-                        `📌 Usage:\n` +
-                        `${config.PREFIX}chatbot on - Enable auto-reply\n` +
-                        `${config.PREFIX}chatbot off - Disable auto-reply\n` +
-                        `${config.PREFIX}chatbot switch [ai] - Change AI model`);
+                        `🔧 Available AIs: ${Object.keys(aiEndpoints).join(', ')}`);
         }
     } catch (e) {
         console.error('Chatbot Command Error:', e);
-        return reply(`❌ Error: ${e.message}`);
+        reply(`❌ Error: ${e.message}`);
     }
 });
 
+// Message handler
 module.exports.init = (conn) => {
     conn.ev.on('messages.upsert', async ({ messages }) => {
         if (!chatbotEnabled) return;
@@ -62,7 +60,7 @@ module.exports.init = (conn) => {
                     message.message.extendedTextMessage?.text || 
                     message.message.imageMessage?.caption;
         
-        if (!text) return;
+        if (!text || text.startsWith(config.PREFIX)) return;
 
         try {
             const startTime = Date.now();
@@ -80,22 +78,12 @@ module.exports.init = (conn) => {
                     contextInfo: {
                         mentionedJid: [message.key.participant || message.key.remoteJid],
                         forwardingScore: 999,
-                        isForwarded: true,
-                        externalAdReply: {
-                            title: `${config.BOT_NAME} AI`,
-                            body: "Made By Marisel",
-                            thumbnailUrl: "https://files.catbox.moe/tpzqtm.jpg",
-                            sourceUrl: "https://github.com/betingrich3/Mercedes"
-                        }
+                        isForwarded: true
                     }
                 }, { quoted: message });
             }
         } catch (e) {
-            console.error('AI API Error:', e);
-            await conn.sendMessage(message.key.remoteJid, { 
-                text: "⚠️ Failed to get AI response. Please try again later.",
-                contextInfo: { mentionedJid: [message.key.participant] }
-            }, { quoted: message });
+            console.error('AI API Error:', e.message);
         }
     });
 };
