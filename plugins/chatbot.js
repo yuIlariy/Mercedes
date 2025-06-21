@@ -1,89 +1,86 @@
 const { cmd } = require('../command');
-const axios = require('axios');
+const moment = require('moment');
 const config = require('../config');
 
-let chatbotEnabled = true; // Enabled by default
-let currentAI = 'gpt3';
+let autoBioEnabled = true; // Enabled by default
+let updateInterval = 60000; // Update every 1 minute (in milliseconds)
 
-const aiEndpoints = {
-    gpt3: 'https://apis.davidcyriltech.my.id/ai/gpt3',
-    metaai: 'https://apis.davidcyriltech.my.id/ai/metaai',
-    deepseek: 'https://apis.davidcyriltech.my.id/ai/deepseek-v3'
+// Function to update profile bio
+const updateBio = async (conn) => {
+    try {
+        const now = moment();
+        const time = now.format('HH:mm:ss');
+        const day = now.format('dddd');
+        const date = now.format('D MMMM YYYY');
+        const name = config.OWNER_NAME || 'Marisel';
+        
+        const newBio = `⏰ ${time} | ${day} | 📅 ${date} | ${name}`;
+        
+        await conn.updateProfileStatus(newBio);
+        console.log(`[AutoBio] Profile updated at ${time}`);
+    } catch (e) {
+        console.error('[AutoBio Error]', e);
+    }
 };
 
 cmd({
-    pattern: "chatbot",
-    alias: ["ai", "bot"],
-    desc: "Toggle chatbot or change AI model",
+    pattern: "autobio",
+    alias: ["bio"],
+    desc: "Toggle automatic bio updates with time/date",
     category: "utility",
-    react: "🤖",
+    react: "⏳",
     filename: __filename
-}, async (conn, mek, m, { from, sender, reply, args }) => {
+}, async (conn, mek, m, { from, reply }) => {
     try {
-        const [action, aiModel] = args;
+        const action = m.args[0]?.toLowerCase();
         
-        if (aiModel && Object.keys(aiEndpoints).includes(aiModel.toLowerCase())) {
-            currentAI = aiModel.toLowerCase();
-            return reply(`✅ AI model switched to ${currentAI}`);
-        }
-
-        if (action === 'on') {
-            if (chatbotEnabled) return reply('❌ Chatbot is already enabled');
-            chatbotEnabled = true;
-            return reply(`✅ Chatbot enabled\nCurrent AI: ${currentAI}`);
+        if (action === 'off') {
+            if (!autoBioEnabled) return reply('❌ Auto-bio is already off');
+            autoBioEnabled = false;
+            clearInterval(conn.autoBioInterval);
+            return reply('✅ Auto-bio updates disabled');
         } 
-        else if (action === 'off') {
-            if (!chatbotEnabled) return reply('❌ Chatbot is already disabled');
-            chatbotEnabled = false;
-            return reply('✅ Chatbot disabled');
+        else if (action === 'on') {
+            if (autoBioEnabled) return reply('❌ Auto-bio is already on');
+            autoBioEnabled = true;
+            startAutoBio(conn);
+            return reply('✅ Auto-bio updates enabled');
+        }
+        else if (action === 'status') {
+            return reply(`🔄 Auto-bio is currently ${autoBioEnabled ? 'ENABLED' : 'DISABLED'}\n` +
+                       `⏱ Update interval: ${updateInterval/1000} seconds\n` +
+                       `📝 Current format:\n` +
+                       `⏰ HH:mm:ss | Day | 📅 D MMMM YYYY`);
         }
         else {
-            return reply(`⚙️ Chatbot Status: ${chatbotEnabled ? 'ON' : 'OFF'}\n` +
-                        `🤖 Current AI: ${currentAI}\n` +
-                        `🔧 Available AIs: ${Object.keys(aiEndpoints).join(', ')}`);
+            return reply(`⚙️ *AutoBio Commands:*\n\n` +
+                        `${config.PREFIX}autobio on - Enable updates\n` +
+                        `${config.PREFIX}autobio off - Disable updates\n` +
+                        `${config.PREFIX}autobio status - Show current settings`);
         }
     } catch (e) {
-        console.error('Chatbot Command Error:', e);
-        reply(`❌ Error: ${e.message}`);
+        console.error('AutoBio Command Error:', e);
+        return reply(`❌ Error: ${e.message}`);
     }
 });
 
-// Message handler
+// Start the auto-bio updates
+const startAutoBio = (conn) => {
+    if (conn.autoBioInterval) clearInterval(conn.autoBioInterval);
+    conn.autoBioInterval = setInterval(() => updateBio(conn), updateInterval);
+    updateBio(conn); // Immediate first update
+};
+
+// Initialize on bot start
 module.exports.init = (conn) => {
-    conn.ev.on('messages.upsert', async ({ messages }) => {
-        if (!chatbotEnabled) return;
-        
-        const message = messages[0];
-        if (!message.message || message.key.fromMe || message.key.remoteJid === 'status@broadcast') return;
-
-        const text = message.message.conversation || 
-                    message.message.extendedTextMessage?.text || 
-                    message.message.imageMessage?.caption;
-        
-        if (!text || text.startsWith(config.PREFIX)) return;
-
-        try {
-            const startTime = Date.now();
-            const apiUrl = `${aiEndpoints[currentAI]}?text=${encodeURIComponent(text)}`;
-            const response = await axios.get(apiUrl, { timeout: 10000 });
-            
-            let aiResponse = response.data?.result || response.data?.response || response.data;
-            if (typeof aiResponse === 'object') {
-                aiResponse = JSON.stringify(aiResponse, null, 2);
-            }
-
-            if (aiResponse) {
-                await conn.sendMessage(message.key.remoteJid, { 
-                    text: `💡 ${aiResponse}\n\n⏱️ ${Date.now() - startTime}ms | 🤖 ${currentAI}`,
-                    contextInfo: {
-                        mentionedJid: [message.key.participant || message.key.remoteJid],
-                        forwardingScore: 999,
-                        isForwarded: true
-                    }
-                }, { quoted: message });
-            }
-        } catch (e) {
-            console.error('AI API Error:', e.message);
+    if (autoBioEnabled) {
+        startAutoBio(conn);
+    }
+    
+    // Also update on reconnection
+    conn.ev.on('connection.update', (update) => {
+        if (update.connection === 'open' && autoBioEnabled) {
+            startAutoBio(conn);
         }
     });
 };
