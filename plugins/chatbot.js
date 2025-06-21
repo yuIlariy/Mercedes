@@ -3,23 +3,31 @@ const moment = require('moment');
 const config = require('../config');
 
 let autoBioEnabled = true; // Enabled by default
-let updateInterval = 60000; // Update every 1 minute (in milliseconds)
+let updateInterval = 60000; // Update every 1 minute
+let bioInterval = null;
 
 // Function to update profile bio
 const updateBio = async (conn) => {
     try {
         const now = moment();
-        const time = now.format('HH:mm:ss');
-        const day = now.format('dddd');
-        const date = now.format('D MMMM YYYY');
-        const name = config.OWNER_NAME || 'Marisel';
-        
-        const newBio = `⏰ ${time} | ${day} | 📅 ${date} | ${name}`;
-        
+        const newBio = `⏰ ${now.format('HH:mm:ss')} | ${now.format('dddd')} | 📅 ${now.format('D MMMM YYYY')} | ${config.OWNER_NAME || 'User'}`;
         await conn.updateProfileStatus(newBio);
-        console.log(`[AutoBio] Profile updated at ${time}`);
     } catch (e) {
-        console.error('[AutoBio Error]', e);
+        console.error('AutoBio Update Error:', e);
+    }
+};
+
+// Start/stop auto-bio updates
+const handleAutoBio = (conn, enable) => {
+    if (enable) {
+        if (bioInterval) clearInterval(bioInterval);
+        bioInterval = setInterval(() => updateBio(conn), updateInterval);
+        updateBio(conn); // Immediate update
+    } else {
+        if (bioInterval) {
+            clearInterval(bioInterval);
+            bioInterval = null;
+        }
     }
 };
 
@@ -30,33 +38,38 @@ cmd({
     category: "utility",
     react: "⏳",
     filename: __filename
-}, async (conn, mek, m, { from, reply }) => {
+}, async (conn, mek, m, { from, reply, args }) => {
     try {
-        const action = m.args[0]?.toLowerCase();
+        const action = (args[0] || '').toLowerCase();
         
-        if (action === 'off') {
-            if (!autoBioEnabled) return reply('❌ Auto-bio is already off');
-            autoBioEnabled = false;
-            clearInterval(conn.autoBioInterval);
-            return reply('✅ Auto-bio updates disabled');
-        } 
-        else if (action === 'on') {
-            if (autoBioEnabled) return reply('❌ Auto-bio is already on');
-            autoBioEnabled = true;
-            startAutoBio(conn);
-            return reply('✅ Auto-bio updates enabled');
-        }
-        else if (action === 'status') {
-            return reply(`🔄 Auto-bio is currently ${autoBioEnabled ? 'ENABLED' : 'DISABLED'}\n` +
-                       `⏱ Update interval: ${updateInterval/1000} seconds\n` +
-                       `📝 Current format:\n` +
-                       `⏰ HH:mm:ss | Day | 📅 D MMMM YYYY`);
-        }
-        else {
-            return reply(`⚙️ *AutoBio Commands:*\n\n` +
-                        `${config.PREFIX}autobio on - Enable updates\n` +
-                        `${config.PREFIX}autobio off - Disable updates\n` +
-                        `${config.PREFIX}autobio status - Show current settings`);
+        switch (action) {
+            case 'on':
+                if (autoBioEnabled) return reply('❌ Auto-bio is already enabled');
+                autoBioEnabled = true;
+                handleAutoBio(conn, true);
+                return reply('✅ Auto-bio updates enabled');
+                
+            case 'off':
+                if (!autoBioEnabled) return reply('❌ Auto-bio is already disabled');
+                autoBioEnabled = false;
+                handleAutoBio(conn, false);
+                return reply('✅ Auto-bio updates disabled');
+                
+            case 'status':
+                return reply(
+                    `⚙️ AutoBio Status: ${autoBioEnabled ? 'ON' : 'OFF'}\n` +
+                    `🔄 Update Interval: ${updateInterval/1000} seconds\n` +
+                    `📝 Current Format:\n` +
+                    `⏰ HH:mm:ss | Day | 📅 Date | Name`
+                );
+                
+            default:
+                return reply(
+                    `⚙️ *AutoBio Commands:*\n\n` +
+                    `${config.PREFIX}autobio on - Enable updates\n` +
+                    `${config.PREFIX}autobio off - Disable updates\n` +
+                    `${config.PREFIX}autobio status - Show settings`
+                );
         }
     } catch (e) {
         console.error('AutoBio Command Error:', e);
@@ -64,23 +77,16 @@ cmd({
     }
 });
 
-// Start the auto-bio updates
-const startAutoBio = (conn) => {
-    if (conn.autoBioInterval) clearInterval(conn.autoBioInterval);
-    conn.autoBioInterval = setInterval(() => updateBio(conn), updateInterval);
-    updateBio(conn); // Immediate first update
-};
-
 // Initialize on bot start
 module.exports.init = (conn) => {
     if (autoBioEnabled) {
-        startAutoBio(conn);
+        handleAutoBio(conn, true);
     }
     
-    // Also update on reconnection
+    // Restart on reconnection
     conn.ev.on('connection.update', (update) => {
         if (update.connection === 'open' && autoBioEnabled) {
-            startAutoBio(conn);
+            handleAutoBio(conn, true);
         }
     });
 };
