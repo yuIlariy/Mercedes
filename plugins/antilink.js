@@ -1,126 +1,92 @@
 const { cmd } = require('../command');
-const config = require('../config');
-
-// Store warning counts per user per group
-const linkWarnings = new Map();
+const config = require("../config");
 
 cmd({
-    pattern: "antilink",
-    alias: ["linkguard"],
-    desc: "Enable/disable link protection in groups",
-    category: "moderation",
-    react: "🔗",
-    filename: __filename,
-    use: '<on/off>'
-}, async (conn, mek, m, { from, reply, isGroup, isAdmins, isBotAdmins }) => {
-    try {
-        if (!isGroup) return reply("❌ This command only works in groups");
-        if (!isBotAdmins) return reply("❌ I need to be admin to control link protection");
-
-        const action = m.args[0]?.toLowerCase();
-        
-        if (action === 'on') {
-            if (conn.antilinkGroups?.has(from)) return reply("✅ Antilink is already enabled");
-            conn.antilinkGroups = conn.antilinkGroups || new Set();
-            conn.antilinkGroups.add(from);
-            return reply("🔗 *Antilink Activated*\n\nNow deleting links sent by non-admins with warnings");
-        } 
-        else if (action === 'off') {
-            if (!conn.antilinkGroups?.has(from)) return reply("✅ Antilink is already disabled");
-            conn.antilinkGroups.delete(from);
-            return reply("🔗 *Antilink Deactivated*\n\nLinks are now allowed from all members");
-        }
-        else {
-            return reply(`⚙️ *Antilink Status:* ${conn.antilinkGroups?.has(from) ? 'ON' : 'OFF'}\n\n` +
-                        `Usage:\n` +
-                        `${config.PREFIX}antilink on - Enable protection\n` +
-                        `${config.PREFIX}antilink off - Disable protection`);
-        }
-    } catch (e) {
-        console.error('Antilink Command Error:', e);
-        reply(`❌ Error: ${e.message}`);
+  'on': "body"
+}, async (conn, m, store, {
+  from,
+  body,
+  sender,
+  isGroup,
+  isAdmins,
+  isBotAdmins,
+  reply
+}) => {
+  try {
+    // Initialize warnings if not exists
+    if (!global.warnings) {
+      global.warnings = {};
     }
+
+    // Only act in groups where bot is admin and sender isn't admin
+    if (!isGroup || isAdmins || !isBotAdmins) {
+      return;
+    }
+
+    // List of link patterns to detect
+    const linkPatterns = [
+      /https?:\/\/(?:chat\.whatsapp\.com|wa\.me)\/\S+/gi, // WhatsApp links
+      /https?:\/\/(?:api\.whatsapp\.com|wa\.me)\/\S+/gi,  // WhatsApp API links
+      /wa\.me\/\S+/gi,                                    // WhatsApp.me links
+      /https?:\/\/(?:t\.me|telegram\.me)\/\S+/gi,         // Telegram links
+      /https?:\/\/(?:www\.)?\.com\/\S+/gi,                // Generic .com links
+      /https?:\/\/(?:www\.)?twitter\.com\/\S+/gi,         // Twitter links
+      /https?:\/\/(?:www\.)?linkedin\.com\/\S+/gi,        // LinkedIn links
+      /https?:\/\/(?:whatsapp\.com|channel\.me)\/\S+/gi,  // Other WhatsApp/channel links
+      /https?:\/\/(?:www\.)?reddit\.com\/\S+/gi,          // Reddit links
+      /https?:\/\/(?:www\.)?discord\.com\/\S+/gi,         // Discord links
+      /https?:\/\/(?:www\.)?twitch\.tv\/\S+/gi,           // Twitch links
+      /https?:\/\/(?:www\.)?vimeo\.com\/\S+/gi,           // Vimeo links
+      /https?:\/\/(?:www\.)?dailymotion\.com\/\S+/gi,     // Dailymotion links
+      /https?:\/\/(?:www\.)?medium\.com\/\S+/gi           // Medium links
+    ];
+
+    // Check if message contains any forbidden links
+    const containsLink = linkPatterns.some(pattern => pattern.test(body));
+
+    // Only proceed if anti-link is enabled and link is detected
+    if (containsLink && config.ANTI_LINK === 'true') {
+      console.log(`Link detected from ${sender}: ${body}`);
+
+      // Try to delete the message
+      try {
+        await conn.sendMessage(from, {
+          delete: m.key
+        });
+        console.log(`Message deleted: ${m.key.id}`);
+      } catch (error) {
+        console.error("Failed to delete message:", error);
+      }
+
+      // Update warning count for user
+      global.warnings[sender] = (global.warnings[sender] || 0) + 1;
+      const warningCount = global.warnings[sender];
+
+      // Handle warnings
+      if (warningCount < 4) {
+        // Send warning message
+        await conn.sendMessage(from, {
+          text: `‎*⚠️LINKS ARE NOT ALLOWED⚠️*\n` +
+                `*╭┈──⬡ WARNING ⬡────*\n` +
+                `*├▢ USER :* @${sender.split('@')[0]}!\n` +
+                `*├▢ COUNT : ${warningCount}*\n` +
+                `*├▢ REASON : Sending Link*\n` +
+                `*├▢ WARN LIMIT : 3*\n` +
+                `*╰┈───────────────•*`,
+          mentions: [sender]
+        });
+      } else {
+        // Remove user if they exceed warning limit
+        await conn.sendMessage(from, {
+          text: `@${sender.split('@')[0]} *Goodbye find somewhere to send links*`,
+          mentions: [sender]
+        });
+        await conn.groupParticipantsUpdate(from, [sender], "remove");
+        delete global.warnings[sender];
+      }
+    }
+  } catch (error) {
+    console.error("Anti-link error:", error);
+    reply("❌ An error occurred while processing the message.");
+  }
 });
-
-// Initialize if not exists
-if (!conn.antilinkGroups) conn.antilinkGroups = new Set();
-
-// Message handler
-module.exports.init = (conn) => {
-    conn.ev.on('messages.upsert', async ({ messages }) => {
-        const message = messages[0];
-        if (!message.message || message.key.fromMe) return;
-
-        const from = message.key.remoteJid;
-        const sender = message.key.participant || from;
-        const isGroup = from.endsWith('@g.us');
-        
-        // Only proceed if antilink is enabled for this group
-        if (!isGroup || !conn.antilinkGroups?.has(from)) return;
-
-        try {
-            // Check if sender is admin
-            const metadata = await conn.groupMetadata(from);
-            const isAdmin = metadata.participants.find(p => p.id === sender)?.admin;
-
-            if (isAdmin) return; // Admins can send links
-
-            // Detect links in message
-            const text = message.message.conversation || 
-                         message.message.extendedTextMessage?.text || 
-                         message.message.imageMessage?.caption || '';
-            
-            const linkRegex = /https?:\/\/[^\s]+/gi;
-            const hasLinks = linkRegex.test(text);
-
-            if (!hasLinks) return;
-
-            // Get current warnings
-            const warningKey = `${from}:${sender}`;
-            const warnings = linkWarnings.get(warningKey) || 0;
-
-            // Delete the message containing links
-            await conn.sendMessage(from, { 
-                delete: message.key 
-            });
-
-            if (warnings >= 2) { // 3rd offense - remove user
-                await conn.groupParticipantsUpdate(from, [sender], 'remove');
-                linkWarnings.delete(warningKey);
-                return conn.sendMessage(from, { 
-                    text: `🚷 @${sender.split('@')[0]} has been removed for repeatedly sending links`,
-                    mentions: [sender]
-                });
-            }
-
-            // Issue warning
-            const newWarnings = warnings + 1;
-            linkWarnings.set(warningKey, newWarnings);
-
-            const warnMsg = `⚠️ *Link Warning* (${newWarnings}/3)\n` +
-                           `@${sender.split('@')[0]}, links are not allowed!\n` +
-                           `Next violation will ${newWarnings === 1 ? 'warn again' : 'result in removal'}`;
-
-            await conn.sendMessage(from, { 
-                text: warnMsg,
-                mentions: [sender]
-            });
-
-        } catch (e) {
-            console.error('Antilink Handler Error:', e);
-        }
-    });
-
-    // Clear warnings when someone leaves the group
-    conn.ev.on('group-participants.update', (update) => {
-        if (update.action === 'remove') {
-            const participants = update.participants.map(p => p.id);
-            for (const [key] of linkWarnings) {
-                const [groupId, userId] = key.split(':');
-                if (groupId === update.id && participants.includes(userId)) {
-                    linkWarnings.delete(key);
-                }
-            }
-        }
-    });
-};
