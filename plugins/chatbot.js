@@ -1,15 +1,35 @@
 const axios = require('axios');
 const fs = require('fs');
 
-// Chatbot configuration
+// Configuration
 const config = {
     enabled: true,
     respondInGroups: false,
     respondToMentions: true,
-    cooldown: 3000, // 3 seconds cooldown
-    typingDelay: 1000, // 1 second typing indicator
-    apiUrl: 'https://api.giftedtech.web.id/api/ai/groq-beta',
-    apikey: 'gifted'
+    cooldown: 3000,
+    typingDelay: 1000,
+    apiUrl: 'https://api.paxsenix.biz.id/ai/gemini-realtime',
+    sessionId: 'ZXlKaklqb2lZMTg0T0RKall6TTNNek13TVdFNE1qazNJaXdpY2lJNkluSmZNbU01TUdGa05ETmtNVFF3WmpNNU5pSXNJbU5vSWpvaWNtTmZZVE16TURWaE1qTmpNR1ExTnpObFl5Sjk',
+    branding: {
+        name: 'Marisel',
+        owner: 'Lord Joel',
+        numbers: [
+            '+254740007567',
+            '+255781144539',
+            '+255767570963'
+        ],
+        thumbnail: 'https://raw.githubusercontent.com/joeljamestech2/JOEL-XMD/main/mydata/media/thumbnail.jpg',
+        github: 'https://github.com/joeljamestech/JOEL-XMD'
+    },
+    replacements: [
+        { pattern: /I am a large language model, trained by Google\.?/gi, replacement: "I am Joel XMD bot, trained by Lord Joel." },
+        { pattern: /by Google/gi, replacement: "by Lord Joel" },
+        { pattern: /large language model/gi, replacement: "Joel XMD bot" },
+        { pattern: /\bGemini\b/gi, replacement: "Joel AI" },
+        { pattern: /\bI'm Gemini\b/gi, replacement: "I'm Joel AI" },
+        { pattern: /Yes, I am Gemini\./gi, replacement: "I'm Joel XMD bot developed by Lord Joel." },
+        { pattern: /I do not have an owner or a phone number/gi, replacement: "Here are my owner WhatsApp numbers: \n${config.branding.numbers.join('\n')}" }
+    ]
 };
 
 // User cooldown tracking
@@ -17,8 +37,18 @@ const userCooldowns = new Map();
 
 async function getAIResponse(prompt) {
     try {
-        const response = await axios.get(`${config.apiUrl}?apikey=${config.apikey}&q=${encodeURIComponent(prompt)}`);
-        return response.data?.result || response.data?.response || "I couldn't generate a response.";
+        const response = await axios.get(`${config.apiUrl}?text=${encodeURIComponent(prompt)}&session_id=${config.sessionId}`);
+        let answer = response.data?.message || 'Oops! I couldn\'t quite catch that 😅. Can you try again?';
+        
+        // Apply branding replacements
+        config.replacements.forEach(replace => {
+            answer = answer.replace(replace.pattern, replace.replacement);
+        });
+        
+        // Inject owner numbers dynamically
+        answer = answer.replace('${config.branding.numbers.join(\'\n\')}', config.branding.numbers.join('\n'));
+        
+        return answer;
     } catch (e) {
         console.error('AI API Error:', e.message);
         return null;
@@ -74,7 +104,17 @@ module.exports = (conn) => {
             
             if (response) {
                 await conn.sendMessage(chatId, { 
-                    text: `🤖 *AI Response:*\n\n${response}`,
+                    text: response,
+                    contextInfo: {
+                        externalAdReply: {
+                            title: config.branding.name,
+                            body: 'Chat with Joel assistant anytime',
+                            thumbnailUrl: config.branding.thumbnail,
+                            sourceUrl: config.branding.github,
+                            mediaType: 1,
+                            renderLargerThumbnail: false,
+                        }
+                    },
                     mentions: isGroup ? [sender] : []
                 }, { quoted: m });
             }
