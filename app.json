@@ -1,138 +1,170 @@
 {
   "name": "Mercedes",
-  "description": "Advanced WhatsApp bot by Marisel",
+  "description": "WhatsApp bot made by Marisel",
   "logo": "https://files.catbox.moe/neni8p.jpg",
-  "keywords": ["whatsapp", "bot", "automation"],
+  "keywords": ["Mercedes"],
   "success_url": "/",
-  "stack": "container",
-  
+
+    "stack": "container",
   "env": {
     "SESSION_ID": {
-      "description": "Your WhatsApp session ID (required for bot operation)",
+      "description": "Put the session-id here.",
       "required": true,
       "value": ""
-    },
+    },  
     
-    "Core Settings": {
-      "description": "Basic bot configuration",
-      "value": ""
-    },
+    "STICKER_NAME": {
+      "description": "type your sticker pack name.",
+      "required": false,
+      "value": "𝖒𝖆𝖗𝖎𝖘𝖊𝖑"
+    }, 
+      
     "PREFIX": {
-      "description": "Command prefix (e.g., '.')",
+      "description": "paste your bot prefix note! Don't apply null prefix.",
       "required": false,
       "value": "."
     },
+    
     "MODE": {
-      "description": "Operation mode (public/private/inbox/group)",
+      "description": "select your bot work type public-private-inbox-group.",
       "required": false,
       "value": "private"
+      
+    },
+
+     "ANTI_DELETE": {
+      "description": "set true for show deleted messages.",
+      "required": false,
+      "value": "true"  
     },
     
-    "Bot Identity": {
-      "description": "Customize bot appearance",
-      "value": ""
-    },
-    "BOT_NAME": {
-      "description": "Name displayed by your bot",
+    "ALWAYS_ONLINE": {
+      "description": "Make it true if want always online.",
       "required": false,
-      "value": "Mercedes"
-    },
-    "STICKER_NAME": {
-      "description": "Name for sticker packs",
-      "required": false,
-      "value": "𝖒𝖆𝖗𝖎𝖘𝖊𝖑"
-    },
+      "value": "true"  
+    },    
+   
+
+    "AUTO_STATUS_SEEN": {
+      "description": "Make it true for automatic status seen.",
+      "required": true,
+      "value": "true"
+    }, 
+
+    "AUTO_STATUS_REACT": {
+      "description": "make it true for automatic status reaction or like.",
+      "required": true,
+      "value": "true"
+    }, 
+    
     "OWNER_NAME": {
-      "description": "Your name as bot owner",
+      "description": "Type Bot Owner Name.",
       "required": false,
       "value": "Marisel"
-    },
+}, 
+
     "OWNER_NUMBER": {
-      "description": "Your WhatsApp number with country code",
+      "description": "put the owner number for bot.",
       "required": false,
       "value": "254740007567"
+
+    }, 
+
+    "BOT_NAME": {
+      "description": "Type here the bot name.",
+      "required": false,
+      "value": "Mercedes"
+
+      }, 
+
+    "ANTI_LINK": {
+      "description": "Make it true if you want bot auto remove group link.",
+      "required": true,
+      "value": "true"
+      
+    },
+
+     "ANTI_LINK_KICK": {
+      "description": "Make it true if you want bot auto remove group link.",
+      "required": true,
+      "value": "false"
+      
     },
     
-    "Media Settings": {
-      "description": "Custom images and media",
-      "value": ""
+    "ANTI_BAD": {
+      "description": "Make it true if you want bot auto delete bad words.",
+      "required": false,
+      "value": "false"
     },
+    
     "MENU_IMAGE_URL": {
-      "description": "URL for menu/mention reply image",
+      "description": "add url for mention reply and menu if want.",
       "required": false,
       "value": "https://files.catbox.moe/7zfdcq.jpg"
     },
     
-    "Automation Features": {
-      "description": "Configure automatic behaviors",
-      "value": ""
-    },
-    "AUTO_STATUS_SEEN": {
-      "description": "Mark status updates as seen automatically",
-      "required": true,
-      "value": "true"
-    },
-    "AUTO_STATUS_REACT": {
-      "description": "React to status updates automatically",
-      "required": true,
-      "value": "true"
-    },
-    "ALWAYS_ONLINE": {
-      "description": "Maintain online presence",
+     "DESCRIPTION": {
+      "description": "add caption for menu and other",
       "required": false,
-      "value": "true"
+      "value": "*Made By Marisel*"
     },
-    "CHAT_BOT": {
-      "description": "Enable AI chatbot functionality",
+
+      "DELETE_LINKS": {
+      "description": "remove links from group automatically without removing member",
       "required": false,
-      "value": "true"
-    },
-    
-    "Group Management": {
-      "description": "Group-specific settings",
-      "value": ""
-    },
-    "ANTI_LINK": {
-      "description": "Remove links from groups",
-      "required": true,
-      "value": "true"
-    },
-    "ANTI_LINK_KICK": {
-      "description": "Remove members who post links",
-      "required": true,
       "value": "false"
     },
-    "WELCOME": {
-      "description": "Send welcome/goodbye messages",
+    
+    "AUTO_RECORDING": {
+      "description": "Make it true if you want auto recoding.",
       "required": false,
-      "value": "true"
+      "value": "false"
+    },
+
+    "AUTO_TYPING": {
+      "description": "Make it true if you want auto typing.",
+      "required": false,
+      "value": "false"
+    },
+
+    "AUTO_REACT": {
+      "description": "Make it true if you want react on every message.",
+      "required": false,
+      "value": "false"
     },
     
-    "Message Handling": {
-      "description": "Message processing options",
-      "value": ""
-    },
-    "ANTI_DELETE": {
-      "description": "Show deleted messages",
+    "CUSTOM_REACT": {
+      "description": "Make it true if you want custom reactions.",
       "required": false,
-      "value": "true"
-    },
+      "value": "false"
+      
+    }, 
+ 
     "ANTI_DEL_PATH": {
-      "description": "Where to show deleted messages (same/inbox)",
+      "description": "change it to -same- if you want to resend deleted message in same chat othwise inbox",
       "required": false,
       "value": "inbox"
+    }, 
+
+    "WELCOME": {
+      "description": "make it true if want goodbye and welcome message in groups.",
+      "required": false,
+      "value": "true"
     },
+
     "READ_MESSAGE": {
-      "description": "Mark messages as read automatically",
+      "description": "Make it true if you want bot read your all sms just now.",
       "required": false,
       "value": "false"
     }
-  },
-  
-  "buildpacks": [
-    {
-      "url": "https://github.com/heroku/heroku-buildpack-nodejs.git"
-    }
-  ],
+
+},
+
+     "buildpacks": [
+        {
+            "url": "https://github.com/heroku/heroku-buildpack-nodejs.git"
+        }
+     ],
   "stack": "heroku-24"
 }
+
