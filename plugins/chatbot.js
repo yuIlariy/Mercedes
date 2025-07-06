@@ -21,9 +21,8 @@ const chatbotCommand = async (m, Matrix) => {
         const response = await fetch(`https://api.paxsenix.biz.id/ai/gemini-realtime?text=${encodeURIComponent(text)}&session_id=ZXlKaklqb2lZMTg0T0RKall6TTNNek13TVdFNE1qazNJaXdpY2lJNkluSmZNbU01TUdGa05ETmtNVFF3WmpNNU5pSXNJbU5vSWpvaWNtTmZZVE16TURWaE1qTmpNR1ExTnpObFl5Sjk`);
         if (!response.ok) return;
 
-        let answer = (await response.json()).message || 'Oops! I couldn’t quite catch that 😅. Can you try again?';
+        let answer = (await response.json()).message || 'Oops! I couldn't quite catch that 😅. Can you try again?';
 
-        // Identity and branding replacements
         answer = answer
             .replace(/I am a large language model, trained by Google\.?/gi, "I am Joel XMD bot, trained by Lord Joel.")
             .replace(/by Google/gi, "by Lord Joel")
@@ -31,25 +30,25 @@ const chatbotCommand = async (m, Matrix) => {
             .replace(/\bGemini\b/gi, "Joel AI")
             .replace(/\bI'm Gemini\b/gi, "I'm Joel AI")
             .replace(/Yes, I am Gemini\./gi, "I'm Joel XMD bot developed by Lord Joel.")
-            .replace(/I do not have an owner or a phone number/gi, "Here are my owner WhatsApp phonephone numbers: \njoeljamestech +255714595878, \njoeljamestech2 +255781144539, \njoeljamestech3 +255767570963");
+            .replace(/I do not have an owner or a phone number/gi, 
+                    `Here are my owner WhatsApp numbers: \njoeljamestech +255714595878, \njoeljamestech2 +255781144539, \njoeljamestech3 +255767570963`);
 
         await Matrix.sendMessage(senderId, {
-            text: `${answer}`,
+            text: answer,
             contextInfo: {
                 externalAdReply: {
                     title: 'JOEL XMD AI',
                     body: 'Chat with joel assistant anytime',
-                    thumbnailUrl: "https://raw.githubusercontent.com/joeljamestech2/JOEL-XMD/refs/heads/main/mydata/media/thumbnail.jpg",
+                    thumbnailUrl: "https://raw.githubusercontent.com/joeljamestech2/JOEL-XMD/main/mydata/media/thumbnail.jpg",
                     sourceUrl: "https://github.com/joeljamestech/JOEL-XMD",
                     mediaType: 1,
-                    renderLargerThumbnail: false,
+                    renderLargerThumbnail: false
                 }
             }
         }, { quoted: m });
 
     } catch (err) {
         console.error('Joel AI error:', err.message);
-        // Silent fail - do not send message to user
     }
 };
 
