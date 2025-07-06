@@ -1,135 +1,56 @@
-const axios = require('axios');
-const fs = require('fs');
+import config from '../../config.cjs';
+import fetch from 'node-fetch';
 
-// Configuration
-const config = {
-    enabled: true,
-    respondInGroups: false,
-    respondToMentions: true,
-    cooldown: 3000,
-    typingDelay: 1000,
-    apiUrl: 'https://api.paxsenix.biz.id/ai/gemini-realtime',
-    sessionId: 'ZXlKaklqb2lZMTg0T0RKall6TTNNek13TVdFNE1qazNJaXdpY2lJNkluSmZNbU01TUdGa05ETmtNVFF3WmpNNU5pSXNJbU5vSWpvaWNtTmZZVE16TURWaE1qTmpNR1ExTnpObFl5Sjk',
-    branding: {
-        name: 'Marisel',
-        owner: 'Lord Joel',
-        numbers: [
-            '+254740007567',
-            '+255781144539',
-            '+255767570963'
-        ],
-        thumbnail: 'https://raw.githubusercontent.com/joeljamestech2/JOEL-XMD/main/mydata/media/thumbnail.jpg',
-        github: 'https://github.com/joeljamestech/JOEL-XMD'
-    },
-    replacements: [
-        { pattern: /I am a large language model, trained by Google\.?/gi, replacement: "I am Joel XMD bot, trained by Lord Joel." },
-        { pattern: /by Google/gi, replacement: "by Lord Joel" },
-        { pattern: /large language model/gi, replacement: "Joel XMD bot" },
-        { pattern: /\bGemini\b/gi, replacement: "Joel AI" },
-        { pattern: /\bI'm Gemini\b/gi, replacement: "I'm Joel AI" },
-        { pattern: /Yes, I am Gemini\./gi, replacement: "I'm Joel XMD bot developed by Lord Joel." },
-        { pattern: /I do not have an owner or a phone number/gi, replacement: "Here are my owner WhatsApp numbers: \n${config.branding.numbers.join('\n')}" }
-    ]
-};
+const chatbotCommand = async (m, Matrix) => {
+    const text = m.message?.conversation || m.message?.extendedTextMessage?.text || null;
+    const senderId = m.key.remoteJid;
+    const senderName = m.pushName || `User ${senderId}`;
+    const ownerNumber = `${config.OWNER_NUMBER}@s.whatsapp.net`;
 
-// User cooldown tracking
-const userCooldowns = new Map();
+    const isChatbotEnabled = config.CHAT_BOT ?? true;
+    const chatbotMode = config.CHAT_BOT_MODE ?? 'public';
+    const privateUsers = new Set(config.PRIVATE_USERS || []);
 
-async function getAIResponse(prompt) {
+    if (!isChatbotEnabled) return;
+    if (senderId === ownerNumber) return;
+    if (senderId.endsWith('@g.us') || senderId === 'status@broadcast' || senderId.includes('@newsletter')) return;
+    if (chatbotMode === 'private' && !privateUsers.has(senderId)) return;
+    if (!text) return;
+
     try {
-        const response = await axios.get(`${config.apiUrl}?text=${encodeURIComponent(prompt)}&session_id=${config.sessionId}`);
-        let answer = response.data?.message || 'Oops! I couldn\'t quite catch that 😅. Can you try again?';
-        
-        // Apply branding replacements
-        config.replacements.forEach(replace => {
-            answer = answer.replace(replace.pattern, replace.replacement);
-        });
-        
-        // Inject owner numbers dynamically
-        answer = answer.replace('${config.branding.numbers.join(\'\n\')}', config.branding.numbers.join('\n'));
-        
-        return answer;
-    } catch (e) {
-        console.error('AI API Error:', e.message);
-        return null;
+        const response = await fetch(`https://api.paxsenix.biz.id/ai/gemini-realtime?text=${encodeURIComponent(text)}&session_id=ZXlKaklqb2lZMTg0T0RKall6TTNNek13TVdFNE1qazNJaXdpY2lJNkluSmZNbU01TUdGa05ETmtNVFF3WmpNNU5pSXNJbU5vSWpvaWNtTmZZVE16TURWaE1qTmpNR1ExTnpObFl5Sjk`);
+        if (!response.ok) return;
+
+        let answer = (await response.json()).message || 'Oops! I couldn’t quite catch that 😅. Can you try again?';
+
+        // Identity and branding replacements
+        answer = answer
+            .replace(/I am a large language model, trained by Google\.?/gi, "I am Joel XMD bot, trained by Lord Joel.")
+            .replace(/by Google/gi, "by Lord Joel")
+            .replace(/large language model/gi, "Joel XMD bot")
+            .replace(/\bGemini\b/gi, "Joel AI")
+            .replace(/\bI'm Gemini\b/gi, "I'm Joel AI")
+            .replace(/Yes, I am Gemini\./gi, "I'm Joel XMD bot developed by Lord Joel.")
+            .replace(/I do not have an owner or a phone number/gi, "Here are my owner WhatsApp phonephone numbers: \njoeljamestech +255714595878, \njoeljamestech2 +255781144539, \njoeljamestech3 +255767570963");
+
+        await Matrix.sendMessage(senderId, {
+            text: `${answer}`,
+            contextInfo: {
+                externalAdReply: {
+                    title: 'JOEL XMD AI',
+                    body: 'Chat with joel assistant anytime',
+                    thumbnailUrl: "https://raw.githubusercontent.com/joeljamestech2/JOEL-XMD/refs/heads/main/mydata/media/thumbnail.jpg",
+                    sourceUrl: "https://github.com/joeljamestech/JOEL-XMD",
+                    mediaType: 1,
+                    renderLargerThumbnail: false,
+                }
+            }
+        }, { quoted: m });
+
+    } catch (err) {
+        console.error('Joel AI error:', err.message);
+        // Silent fail - do not send message to user
     }
-}
-
-module.exports = (conn) => {
-    conn.ev.on('messages.upsert', async ({ messages }) => {
-        if (!config.enabled) return;
-        
-        const m = messages[0];
-        if (!m.message || m.key.fromMe) return;
-
-        // Get message text
-        const messageText = m.message.conversation || 
-                          (m.message.extendedTextMessage?.text) || '';
-        
-        if (!messageText.trim()) return;
-
-        const chatId = m.key.remoteJid;
-        const sender = m.key.participant || m.key.remoteJid;
-        const isGroup = chatId.endsWith('@g.us');
-        const isMentioned = isGroup && 
-                          m.message.extendedTextMessage?.contextInfo?.mentionedJid?.includes(conn.user.id);
-
-        // Check cooldown
-        const now = Date.now();
-        if (userCooldowns.has(sender) && now - userCooldowns.get(sender) < config.cooldown) {
-            return;
-        }
-
-        // Determine response rules
-        let shouldRespond = false;
-        
-        if (!isGroup) {
-            shouldRespond = true; // Always respond in private
-        } else if (config.respondInGroups || (config.respondToMentions && isMentioned)) {
-            shouldRespond = true;
-        }
-
-        if (!shouldRespond) return;
-
-        try {
-            // Update cooldown
-            userCooldowns.set(sender, now);
-
-            // Show typing indicator
-            await conn.sendPresenceUpdate('composing', chatId);
-            await new Promise(resolve => setTimeout(resolve, config.typingDelay));
-
-            // Get AI response
-            const response = await getAIResponse(messageText);
-            
-            if (response) {
-                await conn.sendMessage(chatId, { 
-                    text: response,
-                    contextInfo: {
-                        externalAdReply: {
-                            title: config.branding.name,
-                            body: 'Chat with Joel assistant anytime',
-                            thumbnailUrl: config.branding.thumbnail,
-                            sourceUrl: config.branding.github,
-                            mediaType: 1,
-                            renderLargerThumbnail: false,
-                        }
-                    },
-                    mentions: isGroup ? [sender] : []
-                }, { quoted: m });
-            }
-        } catch (e) {
-            console.error('Chatbot error:', e);
-        }
-    });
-
-    // Clean up cooldown map periodically
-    setInterval(() => {
-        const now = Date.now();
-        for (const [user, timestamp] of userCooldowns.entries()) {
-            if (now - timestamp > config.cooldown * 2) {
-                userCooldowns.delete(user);
-            }
-        }
-    }, 60000);
 };
+
+export default chatbotCommand;
