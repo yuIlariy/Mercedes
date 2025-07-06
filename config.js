@@ -76,7 +76,8 @@ READ_CMD: process.env.READ_CMD || "false",
 DEV: process.env.DEV || "254740007567",
 //replace with your whatsapp number        
 ANTI_VV: process.env.ANTI_VV || "true",
-// true for anti once view 
+CHAT_BOT: process.env.CHAT_BOT !== undefined ? process.env.CHAT_BOT === 'true' : false,
+CHAT_BOT_MODE: process.env.CHAT_BOT_MODE || "public",
 AUTO_RECORDING: process.env.AUTO_RECORDING || "false"
 // make it true for auto recoding 
 };
