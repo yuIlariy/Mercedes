@@ -1,9 +1,9 @@
 const axios = require('axios');
-const config = require('../config'); // Make sure config.PREFIX is defined
+const config = require('../config'); // Ensure config.PREFIX is set
 
-let aiResponderEnabled = true; // Default ON
+let aiResponderEnabled = true; // Default: ON
 
-// Command to toggle AI responder
+// Toggle command for chatbot
 const { cmd } = require('../command');
 cmd({
     pattern: "chatbot",
@@ -35,7 +35,7 @@ cmd({
     }
 });
 
-// Message handler
+// Message handler for automatic replies
 module.exports.init = (conn) => {
     conn.ev.on('messages.upsert', async ({ messages }) => {
         if (!aiResponderEnabled) return;
@@ -66,35 +66,37 @@ module.exports.init = (conn) => {
         if (text.startsWith(config.PREFIX)) return;
 
         try {
-            // Replace with your actual AI API endpoint
+            // Use the same API as your .ai command
             const apiUrl = `https://lance-frank-asta.onrender.com/api/gpt?q=${encodeURIComponent(text)}`;
             await conn.sendPresenceUpdate('composing', message.key.remoteJid);
 
             const { data } = await axios.get(apiUrl, { timeout: 15000 });
-            let aiResponse = data?.message || data?.result || data?.response || data;
+            let aiResponse = data?.message;
 
-            if (typeof aiResponse === 'object') aiResponse = JSON.stringify(aiResponse, null, 2);
-
-            if (aiResponse && aiResponse.trim().length > 0) {
+            if (!aiResponse || !aiResponse.trim()) {
                 await conn.sendPresenceUpdate('paused', message.key.remoteJid);
-                await conn.sendMessage(message.key.remoteJid, {
-                    text: aiResponse,
-                    contextInfo: {
-                        mentionedJid: [message.key.participant || message.key.remoteJid],
-                        forwardingScore: 999,
-                        isForwarded: true,
-                        externalAdReply: {
-                            title: "AI Response",
-                            body: "Powered by GPT",
-                            thumbnailUrl: "https://files.catbox.moe/tpzqtm.jpg",
-                            sourceUrl: "https://lance-frank-asta.onrender.com"
-                        }
-                    }
-                }, { quoted: message });
+                return;
             }
+
+            await conn.sendPresenceUpdate('paused', message.key.remoteJid);
+            await conn.sendMessage(message.key.remoteJid, {
+                text: `🤖 *AI Response:*\n\n${aiResponse}`,
+                contextInfo: {
+                    mentionedJid: [message.key.participant || message.key.remoteJid],
+                    forwardingScore: 999,
+                    isForwarded: true,
+                    externalAdReply: {
+                        title: "AI Response",
+                        body: "Powered by GPT",
+                        thumbnailUrl: "https://files.catbox.moe/tpzqtm.jpg",
+                        sourceUrl: "https://lance-frank-asta.onrender.com"
+                    }
+                }
+            }, { quoted: message });
         } catch (e) {
             console.error('AI Auto-Responder Error:', e.message);
             try { await conn.sendPresenceUpdate('paused', message.key.remoteJid); } catch {}
         }
     });
 };
+    
