@@ -61,7 +61,7 @@ module.exports = {
     ANTI_VV: convertToBool(process.env.ANTI_VV || "true"),
     
     // Chatbot
-    CHAT_BOT: convertToBool(process.env.CHAT_BOT || false),
+    CHAT_BOT: convertToBool(process.env.CHAT_BOT || true),
     CHAT_BOT_MODE: process.env.CHAT_BOT_MODE || "public",
     
     // Messages
