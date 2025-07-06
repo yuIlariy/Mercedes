@@ -43,7 +43,11 @@
       "required": false,
       "value": "true"  
     },    
-   
+   "CHAT_BOT": {
+      "description": "Make it true if you want to enable chatbot",
+      "required": false,
+      "value": "true"
+   },
 
     "AUTO_STATUS_SEEN": {
       "description": "Make it true for automatic status seen.",
