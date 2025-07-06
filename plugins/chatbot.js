@@ -17,7 +17,7 @@ async function getAIResponse(message, apiType = 'gpt') {
                 apiUrl = `https://api.ryzendesu.vip/api/ai/deepseek?text=${encodeURIComponent(message)}`;
                 break;
             default:
-                apiUrl = `https://api.giftedtech.web.id/api/ai/groq-beta?apikey=gifted&?q=${encodeURIComponent(message)}`;
+                apiUrl = `https://api.giftedtech.web.id/api/ai/groq-beta?apikey=gifted&q=${encodeURIComponent(message)}`;
         }
 
         const { data } = await axios.get(apiUrl);
