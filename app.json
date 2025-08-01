@@ -157,8 +157,8 @@
     },
 
     "sendStartMessage": {
-      "description": "Make it false to disable the start message (app.json setting)",
-      "required": false,
+      "description": "Make it false to disable the start message",
+      "required": true,
       "value": "true"
     }
   },
