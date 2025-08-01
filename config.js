@@ -77,6 +77,8 @@ DEV: process.env.DEV || "254740007567",
 //replace with your whatsapp number        
 ANTI_VV: process.env.ANTI_VV || "true",
 // true for anti once view 
-AUTO_RECORDING: process.env.AUTO_RECORDING || "false"
+AUTO_RECORDING: process.env.AUTO_RECORDING || "false",
 // make it true for auto recoding 
+SEND_START_MESSAGE: process.env.SEND_START_MESSAGE || "true"
+// make false to disable start message
 };
