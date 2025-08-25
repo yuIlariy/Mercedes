@@ -43,7 +43,7 @@ module.exports = {
   AUTO_STATUS_MSG: process.env.AUTO_STATUS_MSG || "*Just seen ur status 😆 🤖*", // Status reply message
   READ_MESSAGE: getConfig("READ_MESSAGE") || process.env.READ_MESSAGE || "false", // Mark messages as read
   REJECT_MSG: process.env.REJECT_MSG || "*📵 Calls are not allowed on this number unless you have permission. 🚫*", // Call rejection message
-  ALIVE_IMG: getConfig("ALIVE_IMG") || process.env.ALIVE_IMG || "https://i.ibb.co/fYrXbwbf/malvin-xd.jpg", // Alive image
+  ALIVE_IMG: getConfig("ALIVE_IMG") || process.env.ALIVE_IMG || "https://url.bwmxmd.online/Adams.xm472dqv.jpeg", // Alive image
   LIVE_MSG: process.env.LIVE_MSG || "> ʙᴏᴛ ɪs sᴘᴀʀᴋɪɴɢ ᴀᴄᴛɪᴠᴇ ᴀɴᴅ ᴀʟɪᴠᴇ\n\n\n> ɢɪᴛʜᴜʙ :* github.com/betingrich4/Mercedes", // Alive message
 
   // ===== REACTION & STICKER SETTINGS =====
@@ -55,9 +55,9 @@ module.exports = {
   AUTO_STICKER: getConfig("AUTO_STICKER") || process.env.AUTO_STICKER || "false", // Auto-send stickers
 
   // ===== MEDIA & AUTOMATION =====
-  AUTO_RECORDING: getConfig("AUTO_RECORDING") || process.env.AUTO_RECORDING || "false", // Auto-record voice notes
-  AUTO_TYPING: getConfig("AUTO_TYPING") || process.env.AUTO_TYPING || "false", // Show typing indicator
-  MENTION_REPLY: getConfig("MENTION_REPLY") || process.env.MENTION_REPLY || "false", // Reply to mentions
+  AUTO_RECORDING: getConfig("AUTO_RECORDING") || process.env.AUTO_RECORDING || "true", // Auto-record voice notes
+  AUTO_TYPING: getConfig("AUTO_TYPING") || process.env.AUTO_TYPING || "true", // Show typing indicator
+  MENTION_REPLY: getConfig("MENTION_REPLY") || process.env.MENTION_REPLY || "true", // Reply to mentions
   MENU_IMAGE_URL: getConfig("MENU_IMAGE_URL") || process.env.MENU_IMAGE_URL || "https://url.bwmxmd.online/Adams.xm472dqv.jpeg", // Menu image
 
   // ===== SECURITY & ANTI-FEATURES =====
