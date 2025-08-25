@@ -5,7 +5,7 @@
 # Get session id 1
 [![Get Session](https://img.shields.io/badge/Get_Session-00BFFF?style=for-the-badge)](https://session-v35f.onrender.com/)
 
-# Get session id 1
+# Get session id 2
 [![Get Session](https://img.shields.io/badge/Get_Session-00BFFF?style=for-the-badge)](https://ket-cjpg.onrender.com/)
 
 
