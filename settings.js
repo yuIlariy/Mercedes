@@ -24,10 +24,10 @@ module.exports = {
   BAILEYS: process.env.BAILEYS || "@whiskeysockets/baileys", // WhatsApp library
 
   // ===== OWNER & DEVELOPER SETTINGS =====
-  OWNER_NUMBER: settings.OWNER_NUMBER || process.env.OWNER_NUMBER || "254740007567", // Owner's WhatsApp number
-  OWNER_NAME: getConfig("OWNER_NAME") || process.env.OWNER_NAME || "Marisel", // Owner's name
-  DEV: process.env.DEV || "254740007567", // Developer's contact
-  DEVELOPER_NUMBER: '254740007567@s.whatsapp.net', // Developer's WhatsApp ID
+  OWNER_NUMBER: settings.OWNER_NUMBER || process.env.OWNER_NUMBER || "254708583813", // Owner's WhatsApp number
+  OWNER_NAME: getConfig("OWNER_NAME") || process.env.OWNER_NAME || "KOOKY", // Owner's name
+  DEV: process.env.DEV || "254708583813", // Developer's contact
+  DEVELOPER_NUMBER: '254708583813@s.whatsapp.net', // Developer's WhatsApp ID
   
   
   MENU_AUDIO_URL: getConfig("MENU_AUDIO_URL") || process.env.MENU_AUDIO_URL || 'https://files.catbox.moe/vkvci3.mp3', // Menu audio
@@ -51,38 +51,38 @@ module.exports = {
   OWNER_REACT: getConfig("OWNER_REACT") || process.env.OWNER_REACT || "false", // Owner-specific reactions
   CUSTOM_REACT: getConfig("CUSTOM_REACT") || process.env.CUSTOM_REACT || "false", // Custom emoji reactions
   CUSTOM_REACT_EMOJIS: getConfig("CUSTOM_REACT_EMOJIS") || process.env.CUSTOM_REACT_EMOJIS || "💝,💖,💗,❤️‍🩹,❤️,🧡,💛,💚,💙,💜,🤎,🖤,🤍", // Custom reaction emojis
-  STICKER_NAME: process.env.STICKER_NAME || "Mercedes", // Sticker pack name
+  STICKER_NAME: process.env.STICKER_NAME || "KOOKY", // Sticker pack name
   AUTO_STICKER: getConfig("AUTO_STICKER") || process.env.AUTO_STICKER || "false", // Auto-send stickers
 
   // ===== MEDIA & AUTOMATION =====
-  AUTO_RECORDING: getConfig("AUTO_RECORDING") || process.env.AUTO_RECORDING || "true", // Auto-record voice notes
-  AUTO_TYPING: getConfig("AUTO_TYPING") || process.env.AUTO_TYPING || "true", // Show typing indicator
-  MENTION_REPLY: getConfig("MENTION_REPLY") || process.env.MENTION_REPLY || "true", // Reply to mentions
+  AUTO_RECORDING: getConfig("AUTO_RECORDING") || process.env.AUTO_RECORDING || "fasle", // Auto-record voice notes
+  AUTO_TYPING: getConfig("AUTO_TYPING") || process.env.AUTO_TYPING || "false", // Show typing indicator
+  MENTION_REPLY: getConfig("MENTION_REPLY") || process.env.MENTION_REPLY || "false", // Reply to mentions
   MENU_IMAGE_URL: getConfig("MENU_IMAGE_URL") || process.env.MENU_IMAGE_URL || "https://url.bwmxmd.online/Adams.xm472dqv.jpeg", // Menu image
 
   // ===== SECURITY & ANTI-FEATURES =====
   ANTI_DELETE: getConfig("ANTI_DELETE") || process.env.ANTI_DELETE || "true", // Prevent message deletion
   ANTI_CALL: getConfig("ANTI_CALL") || process.env.ANTI_CALL || "false", // Block incoming calls
   ANTI_BAD_WORD: getConfig("ANTI_BAD_WORD") || process.env.ANTI_BAD_WORD || "false", // Block bad words
-  ANTI_LINK: getConfig("ANTI_LINK") || process.env.ANTI_LINK || "true", // Block links in groups
-  ANTI_VV: getConfig("ANTI_VV") || process.env.ANTI_VV || "true", // Block view-once messages
+  ANTI_LINK: getConfig("ANTI_LINK") || process.env.ANTI_LINK || "false", // Block links in groups
+  ANTI_VV: getConfig("ANTI_VV") || process.env.ANTI_VV || "false", // Block view-once messages
   DELETE_LINKS: getConfig("DELETE_LINKS") || process.env.DELETE_LINKS || "false", // Auto-delete links
   ANTI_DEL_PATH: process.env.ANTI_DEL_PATH || "inbox", // Log deleted messages
-  ANTI_BOT: getConfig("ANTI_BOT") || process.env.ANTI_BOT || "true", // Block other bots
-  PM_BLOCKER: getConfig("PM_BLOCKER") || process.env.PM_BLOCKER || "true", // Block private messages
+  ANTI_BOT: getConfig("ANTI_BOT") || process.env.ANTI_BOT || "false", // Block other bots
+  PM_BLOCKER: getConfig("PM_BLOCKER") || process.env.PM_BLOCKER || "false", // Block private messages
 
   // ===== BOT BEHAVIOR & APPEARANCE =====
-  DESCRIPTION: process.env.DESCRIPTION || "*ᴍᴀᴅᴇ ʙʏ ᴍᴀʀɪsᴇʟ*", // Bot footer
-  PUBLIC_MODE: getConfig("PUBLIC_MODE") || process.env.PUBLIC_MODE || "true", // Allow public commands
+  DESCRIPTION: process.env.DESCRIPTION || "*ᴍᴀᴅᴇ ʙʏ ᴋᴏᴏᴋʏ*", // Bot footer
+  PUBLIC_MODE: getConfig("PUBLIC_MODE") || process.env.PUBLIC_MODE || "false", // Allow public commands
   ALWAYS_ONLINE: getConfig("ALWAYS_ONLINE") || process.env.ALWAYS_ONLINE || "false", // Show bot as always online
-  AUTO_STATUS_REACT: getConfig("AUTO_STATUS_REACT") || process.env.AUTO_STATUS_REACT || "true", // React to status updates
+  AUTO_STATUS_REACT: getConfig("AUTO_STATUS_REACT") || process.env.AUTO_STATUS_REACT || "false", // React to status updates
   AUTO_STATUS_SEEN: getConfig("AUTO_STATUS_SEEN") || process.env.AUTO_STATUS_SEEN || "true", // View status updates
   AUTO_BIO: getConfig("AUTO_BIO") || process.env.AUTO_BIO || "false", // Auto-update bio
   WELCOME: getConfig("WELCOME") || process.env.WELCOME || "false", // Welcome messages
   GOODBYE: getConfig("GOODBYE") || process.env.GOODBYE || "false", // Goodbye messages
   ADMIN_ACTION: getConfig("ADMIN_ACTION") || process.env.ADMIN_ACTION || "false", // Admin event handling
   version: process.env.version || "1.5.0", // Bot version
-  TIMEZONE: settings.TIMEZONE || process.env.TIMEZONE || "Africa/Harare", // Bot timezone
+  TIMEZONE: settings.TIMEZONE || process.env.TIMEZONE || "Africa/Nairobi", // Bot timezone
 
 
   // ===== CATEGORY-SPECIFIC IMAGE URLs =====
